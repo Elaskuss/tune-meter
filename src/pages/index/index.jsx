@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { NavOptionContainer } from "./index.styles";
-import NavOption from "../components/nav-button/nav-option.component";
+import NavOption from "../../components/nav-button/nav-option.component";
 import { useEffect } from "react";
-import GameForm from "../components/game-form/game-form.component";
+import GameForm from "../../components/game-form/game-form.component";
 
 const Index = () => {
-    const [joinGame, setJoinGame] = useState("join");
-
+   const [joinGame, setJoinGame] = useState("join");
+   
     useEffect(() => {
+         localStorage.clear();
         document.querySelector(".join").classList.add("selected");
     }, [])
     
