@@ -7,11 +7,12 @@ import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 
 const Index = () => {
-    const {removePlayer} = useContext(PlayerContext);
+    const {removePlayer, player} = useContext(PlayerContext);
     const [joinGame, setJoinGame] = useState("join");
 
     useEffect(() => {
         removePlayer();
+        console.log(player);
         document.querySelector(".join").classList.add("selected");
     }, []);
 

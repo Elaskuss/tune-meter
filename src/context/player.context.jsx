@@ -9,7 +9,7 @@ const INITIAL_STATE = {
       displayName: "",
       gameKey: "",
       id: "",
-      status: "not ready",
+      status: "NOT READY",
       points: "",
       disconnected: false,
    }
@@ -28,11 +28,6 @@ const playersReducer = (state, action) => {
             ...state,
             player: action.payload,
          }
-      case "DISCONNECTED_PLAYER":
-         return {
-            ...state,
-            
-         }
       default:
          return state;
    }
@@ -42,16 +37,18 @@ export const PlayerProvider = ({ children }) => {
    const [{players, player}, dispatch] = useReducer(playersReducer, INITIAL_STATE);
 
    const updatePlayers = (players) => {
+      console.log("update players");
       dispatch({ type: "UPDATE_PLAYERS", payload: players });
    };
 
    const updatePlayer = (player) => {
+      console.log("update one player");
       dispatch({ type: "UPDATE_PLAYER", payload: player });
       setDoc(`players/${player.id}`, player);
    };
 
    const removePlayer = () => {
-      dispatch({ type: "UPDATE_PLAYER", payload: {...player, disconnected: true} });
+      dispatch({ type: "UPDATE_PLAYER", payload: player });
       
       if(player.id !== ""){
          removeDoc(`players/${player.id}`);

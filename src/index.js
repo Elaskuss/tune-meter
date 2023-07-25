@@ -11,7 +11,9 @@ root.render(
    <React.StrictMode>
       <BrowserRouter>
          <PlayerProvider>
-            <App />
+
+               <App />
+
          </PlayerProvider>
       </BrowserRouter>
    </React.StrictMode>
