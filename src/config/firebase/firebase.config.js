@@ -1,17 +1,26 @@
 import { initializeApp } from "firebase/app";
-import { get, getDatabase, ref, set } from "firebase/database";
-import { where, query} from "firebase/firestore";
+import {
+  equalTo,
+  get,
+  getDatabase,
+  orderByChild,
+  ref,
+  set,
+  query,
+  onValue,
+  remove,
+} from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 
 const firebaseConfig = {
-   apiKey: "AIzaSyAyButGwy_9KQ_UMC0AnurKyupd4yRgVwo",
-   authDomain: "lobby-eef07.firebaseapp.com",
-   databaseURL:
-      "https://lobby-eef07-default-rtdb.europe-west1.firebasedatabase.app",
-   projectId: "lobby-eef07",
-   storageBucket: "lobby-eef07.appspot.com",
-   messagingSenderId: "292889344397",
-   appId: "1:292889344397:web:f21d0e77fa0b090c1de5c4",
+  apiKey: "AIzaSyAyButGwy_9KQ_UMC0AnurKyupd4yRgVwo",
+  authDomain: "lobby-eef07.firebaseapp.com",
+  databaseURL:
+    "https://lobby-eef07-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lobby-eef07",
+  storageBucket: "lobby-eef07.appspot.com",
+  messagingSenderId: "292889344397",
+  appId: "1:292889344397:web:f21d0e77fa0b090c1de5c4",
 };
 
 initializeApp(firebaseConfig);
@@ -20,125 +29,133 @@ initializeApp(firebaseConfig);
 const db = getDatabase();
 
 const dbRef = (directory) => {
-   return ref(db, `${directory}`);
+  return ref(db, `${directory}`);
 };
 
 export const getDoc = async (directory) => {
-   return get(dbRef(directory)).then((snapshot) => {
-      if (snapshot.exists()) {
-         return snapshot.val();
-      } else {
-         return null;
-      }
-   });
+  return get(dbRef(directory)).then((snapshot) => {
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      return null;
+    }
+  });
 };
 
-export const onDataChange = async () => {
-   const collectionRef = ref(db, "players");
-   const q = query(collectionRef, where("status", "==", "not ready"));
-   console.log(q.get());
+export const onDataChange = async (directory, key, value, updatePlayers) => {
+  const collectionRef = ref(db, directory);
+  const q = query(collectionRef, orderByChild(key), equalTo(value));
 
+  onValue(q, (snapshot) => {
+   
+    const dataArray = [];
+
+    snapshot.forEach((childSnapshot) => {
+      dataArray.push(childSnapshot.val());
+    });
+
+    updatePlayers(dataArray);
+  });
 };
 
-// const unsubscribe = onSnapshot(q, (querySnapshot) => {
-//    const documents = [];
+export const queryValue = async (directory, key, value) => {
+   const collectionRef = ref(db, directory);
+   const q = query(collectionRef, orderByChild(key), equalTo(value));
+ 
+   const dataArray = []
 
-//    querySnapshot.forEach((doc) => {
-//       documents.push({
-//          id: doc.id,
-//          data: doc.data(),
-//       });
-//    });
-
-//    console.log(documents);
-// });
-
-// return unsubscribe;
+   const snapshot = await get(q);
+ 
+   if (snapshot.exists()) {
+      snapshot.forEach((childSnapshot) => {
+         dataArray.push(childSnapshot.val());
+      });
+     return dataArray;
+   } else {
+     return null;
+   }
+ };
+ 
 
 export const setDoc = async (directory, data) => {
-   if (data !== undefined) {
-      set(dbRef(directory), data);
-   } else {
-      console.error("Cannot set undefined data to the database.");
-   }
+  if (data !== undefined) {
+    set(dbRef(directory), data);
+  } else {
+    console.error("Cannot set undefined data to the database.");
+  }
 };
 
-// export const onDataChange = async (directory, field = "", func) => {
-//    onValue(dbRef(directory, field), async (snapshot) => {
-//       const data = snapshot.val();
-//       func(data);
-//    });
-// };
+export const removeDoc = async (directory) => {
+     await remove(dbRef(directory));
+ };
+
 
 export const createPlayer = async (displayName, gameKey) => {
-   const id = await uuidv4();
+  const id = uuidv4();
 
-   const player = {
-      id: id,
-      displayName: displayName,
-      status: "not ready",
-      gameKey: gameKey,
-   };
+  const player = {
+    id: id,
+    displayName: displayName,
+    status: "not ready",
+    gameKey: gameKey,
+  };
 
-   await setDoc("players/" + id, player);
-   return player;
+  return player;
 };
 
-export const createGame = async (displayName, updatePlayers) => {
-   let gameCreated = false;
-   let result = "";
+export const createGame = async (displayName, updatePlayer) => {
+  let gameCreated = false;
+  let result = "";
 
-   do {
-      const characters = "abcdefghijklmnopqrstuvwxyz0123456789".toUpperCase();
-      const charactersLength = characters.length;
-      for (let i = 0; i < 6; i++) {
-         result += characters.charAt(
-            Math.floor(Math.random() * charactersLength)
-         );
-      }
+  do {
+    const characters = "abcdefghijklmnopqrstuvwxyz0123456789".toUpperCase();
+    const charactersLength = characters.length;
+    for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
 
-      const value = await getDoc("lobbies/" + result);
+    const value = await getDoc("lobbies/" + result);
 
-      if (value === null) {
-         const player = await createPlayer(displayName, result);
+    if (value === null) {
+      const player = await createPlayer(displayName, result);
 
-         localStorage.setItem("gameKey", result);
-         localStorage.setItem("player", JSON.stringify(player));
+      localStorage.setItem("gameKey", result);
+      localStorage.setItem("player", JSON.stringify(player));
 
-         await setDoc("lobbies/" + result, { players: [player.id] });
+      await setDoc("lobbies/" + result, {gameActive: false});
 
-         updatePlayers([player]);
+      updatePlayer(player);
 
-         gameCreated = true;
-      }
-   } while (gameCreated === false);
+      gameCreated = true;
+    }
+  } while (gameCreated === false);
 };
 
-export const joinGame = async (gameKey, displayName, updatePlayers) => {
-   const value = await getDoc("lobbies/" + gameKey);
+export const joinGame = async (gameKey, displayName, updatePlayer) => {
+  const value = await getDoc("lobbies/" + gameKey);
 
-   if (value === null) {
-      throw new Error("Game not found");
+  if (value === null) {
+    throw new Error("Game not found");
+  }
+
+  const sameName = await queryValue("players", "gameKey", gameKey);
+
+  sameName.forEach((player) => {
+   if(player.displayName === displayName){
+      throw new Error("Username is already in use");
    }
+  })
 
-   const length = value.players.length;
+  const player = await createPlayer(displayName, gameKey);
 
-   for (let i = 0; i < length; i++) {
-      if (value.players[i].displayName === displayName) {
-         throw new Error("Username is already in use");
-      }
-   }
+  const players = [...value.players, player.id];
 
-   const player = await createPlayer(displayName, gameKey);
+  localStorage.setItem("gameKey", gameKey);
+  localStorage.setItem("player", JSON.stringify(player));
 
-   const players = [...value.players, player.id];
+  await setDoc("lobbies/" + gameKey, {
+    players: players,
+  });
 
-   localStorage.setItem("gameKey", gameKey);
-   localStorage.setItem("player", JSON.stringify(player));
-
-   await setDoc("lobbies/" + gameKey, {
-      players: players,
-   });
-
-   updatePlayers(players);
+  updatePlayer(player);
 };

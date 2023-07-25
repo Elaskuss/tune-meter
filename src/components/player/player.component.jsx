@@ -1,30 +1,30 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { setDoc, getDoc } from "../../config/firebase/firebase.config"
 import { PlayerContext } from "../../context/player.context";
 
 const Player = ({displayName, id, status}) => {
-   const [playerReady, setPlayerReady] = useState("not ready");
-   const player = JSON.parse(localStorage.getItem("player"));
+   const {updatePlayer, player} = useContext(PlayerContext);
 
-   const eventHandler = async (event) => {
+   const notReady = { ...player, status: "not ready" };
+   const ready = { ...player, status: "ready" };
+
+   const eventHandler = async () => {
       switch(status) {
          case "ready":
-            setPlayerReady("not ready")
+            updatePlayer(notReady)
            break;
          case "not ready":
-            setPlayerReady("ready");
+            updatePlayer(ready)
            break;
          default:
-            setPlayerReady("not ready");
+            updatePlayer(notReady)
        } 
-
-      setDoc("players", {...player, status: playerReady});
    }
 
    return (
       <div key={id}>
          <p>{displayName}</p>
-         <button onClick={eventHandler}>{playerReady}</button>
+         {player.id === id ?<button onClick={eventHandler}>{status}</button> : <p>{status}</p>}
       </div>
    )
 }

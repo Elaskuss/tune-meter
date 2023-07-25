@@ -4,13 +4,14 @@ import { PlayerContext } from "../../context/player.context";
 import Player from "../../components/player/player.component";
 
 const Lobby = () => {
-   const { players } = useContext(PlayerContext);
-
+   const { players, player } = useContext(PlayerContext);
    const navigate = useNavigate();
-   const gameKey = localStorage.getItem("gameKey");
+
+   
+   const gameKey = player.gameKey
 
    useEffect(() => {
-      if(gameKey === null){
+      if(gameKey === ""){
          navigate("/");
       }
    }, []);
@@ -19,7 +20,7 @@ const Lobby = () => {
       <div>
          <h1>{gameKey}</h1>
          <div>
-            {players && players.map((player) => (<Player displayName={player.displayName} id={player.id} status={player.status}/>))}
+            {players.length > 0 && players.map((player) => (<Player displayName={player.displayName} id={player.id} status={player.status}/>))}
          </div>
       </div>
       

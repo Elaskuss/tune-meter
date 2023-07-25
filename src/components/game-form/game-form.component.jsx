@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 
 const GameForm = ({ promt, type }) => {
-   const {updatePlayers} = useContext(PlayerContext);
+   const {updatePlayer} = useContext(PlayerContext);
    const navigate = useNavigate();
 
    const defaultFormFields = {
@@ -35,12 +35,12 @@ const GameForm = ({ promt, type }) => {
       event.preventDefault();
 
       if (type === "hidden") {
-         await createGame(formFields.username, updatePlayers);
+         await createGame(formFields.username, updatePlayer);
          //Here i want to update the context
          navigate("lobby");
       } else {
          try {
-            await joinGame(formFields.gameKey, formFields.username, updatePlayers);
+            await joinGame(formFields.gameKey, formFields.username, updatePlayer);
             //Here i want to update the context
             navigate("lobby");
          } catch (error) {
