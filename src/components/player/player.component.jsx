@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { setDoc, getDoc } from "../../config/firebase/firebase.config"
 import { PlayerContext } from "../../context/player.context";
 import { PlayerContainer } from "./player.styles";
 
@@ -15,9 +14,11 @@ const Player = ({displayName, id, status}) => {
             updatePlayer(notReady)
            break;
          case "NOT READY":
-            console.log("change status call update player");
             updatePlayer(ready)
            break;
+         default:
+            updatePlayer(notReady);
+            break;
        } 
    }
 

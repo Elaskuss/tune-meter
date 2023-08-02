@@ -12,7 +12,8 @@ const INITIAL_STATE = {
       status: "NOT READY",
       points: "",
       disconnected: false,
-   }
+      spotify: "",
+   },
 };
 
 // Define your playersReducer function
@@ -27,38 +28,39 @@ const playersReducer = (state, action) => {
          return {
             ...state,
             player: action.payload,
-         }
+         };
       default:
          return state;
    }
 };
 
 export const PlayerProvider = ({ children }) => {
-   const [{players, player}, dispatch] = useReducer(playersReducer, INITIAL_STATE);
+   const [{ players, player }, dispatch] = useReducer(
+      playersReducer,
+      INITIAL_STATE
+   );
 
    const updatePlayers = (players) => {
-      console.log("update players");
       dispatch({ type: "UPDATE_PLAYERS", payload: players });
    };
 
    const updatePlayer = (player) => {
-      console.log("update one player");
-      dispatch({ type: "UPDATE_PLAYER", payload: player });
+      dispatch({ type: "UPDATE_PLAYER", payload: player});
       setDoc(`players/${player.id}`, player);
    };
 
    const removePlayer = () => {
       dispatch({ type: "UPDATE_PLAYER", payload: player });
-      
-      if(player.id !== ""){
+
+      if (player.id !== "") {
          removeDoc(`players/${player.id}`);
       }
 
       const playersArray = [];
-      players.forEach(player => {
+      players.forEach((player) => {
          playersArray.push(player.id);
       });
-      setDoc(`lobbies/${player.gameKey}/players`, playersArray)
+      setDoc(`lobbies/${player.gameKey}/players`, playersArray);
    };
 
    const value = {

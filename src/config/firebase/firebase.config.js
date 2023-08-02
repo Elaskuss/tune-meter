@@ -9,6 +9,7 @@ import {
    query,
    onValue,
    remove,
+   off,
 } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 
@@ -42,20 +43,21 @@ export const getDoc = async (directory) => {
    });
 };
 
+let unsubscribe = () => {};
+
 export const onDataChange = async (directory, key, value, updatePlayers) => {
-   const collectionRef = ref(db, directory);
-   const q = query(collectionRef, orderByChild(key), equalTo(value));
-
-   onValue(q, (snapshot) => {
-      console.log("on value change");
-      const dataArray = [];
-
-      snapshot.forEach((childSnapshot) => {
-         dataArray.push(childSnapshot.val());
-      });
-
-      updatePlayers(dataArray);
-   });
+  const collectionRef = ref(db, directory);
+  const q = query(collectionRef, orderByChild(key), equalTo(value));
+  
+  unsubscribe();
+  
+  unsubscribe = onValue(q, (snapshot) => {
+    const dataArray = [];
+    snapshot.forEach((childSnapshot) => {
+       dataArray.push(childSnapshot.val());
+    });
+    updatePlayers(dataArray);
+  });
 };
 
 export const queryValue = async (directory, key, value) => {
@@ -96,42 +98,44 @@ export const createPlayer = async (displayName, gameKey) => {
       displayName: displayName.toUpperCase(),
       status: "NOT READY",
       gameKey: gameKey,
+      gameActive: false,
    };
+
+   sessionStorage.setItem("player", JSON.stringify(player));
 
    return player;
 };
 
-export const createGame = async (displayName, updatePlayer) => {
+export const createGame = async (displayName, updatePlayer, updatePlayers) => {
    let gameCreated = false;
-   let result = "";
+   let gameKey = "";
 
    do {
       const characters = "abcdefghijklmnopqrstuvwxyz0123456789".toUpperCase();
       const charactersLength = characters.length;
       for (let i = 0; i < 6; i++) {
-         result += characters.charAt(
+         gameKey += characters.charAt(
             Math.floor(Math.random() * charactersLength)
          );
       }
 
-      const value = await getDoc("lobbies/" + result);
+      const value = await getDoc("lobbies/" + gameKey);
 
       if (value === null) {
-         const player = await createPlayer(displayName, result);
+         const player = await createPlayer(displayName, gameKey);
 
-         localStorage.setItem("gameKey", result);
-         localStorage.setItem("player", JSON.stringify(player));
-
-         await setDoc("lobbies/" + result, { gameActive: false });
+         await setDoc("lobbies/" + gameKey, { gameActive: false });
 
          updatePlayer(player);
+         onDataChange("players", "gameKey", gameKey, updatePlayers)
+
 
          gameCreated = true;
       }
    } while (gameCreated === false);
 };
 
-export const joinGame = async (gameKey, displayName, oldPlayer, updatePlayer) => {
+export const joinGame = async (gameKey, displayName, updatePlayer, updatePlayers) => {
    const value = await getDoc("lobbies/" + gameKey);
 
    if (value === null) {
@@ -141,17 +145,18 @@ export const joinGame = async (gameKey, displayName, oldPlayer, updatePlayer) =>
    const sameName = await queryValue("players", "gameKey", gameKey);
 
    sameName.forEach((player) => {
-      if (player.displayName === displayName) {
+      if (player.displayName === displayName.toUpperCase()) {
          throw new Error("Username is already in use");
       }
    });
 
-   
+   const player = await createPlayer(displayName, gameKey);
 
-   if (oldPlayer.gameKey === gameKey) {
-      updatePlayer({...oldPlayer, displayName: displayName});
-   } else {
-      updatePlayer(await createPlayer(displayName, gameKey));
-   }
-   
+   updatePlayer(player);
+   onDataChange("players", "gameKey", gameKey, updatePlayers);
 };
+
+export const reconnectGame = async (player, updatePlayer, updatePlayers) => {
+   updatePlayer(player);
+   onDataChange("players", "gameKey", player.gameKey, updatePlayers);
+}

@@ -1,28 +1,48 @@
 import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { FormStyle } from "./game-form.styles";
-import { createGame, joinGame } from "../../config/firebase/firebase.config";
+import { createGame, joinGame, reconnectGame } from "../../config/firebase/firebase.config";
 import ErrorMessage from "../error-message/error-message.component";
 import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 
 
 const GameForm = ({ promt, type }) => {
-   const {updatePlayer, player} = useContext(PlayerContext);
    const navigate = useNavigate();
+   const [activePlayers, setActivePlayers] = useState(0);
+   const {updatePlayer, updatePlayers, player, players} = useContext(PlayerContext);
 
    const defaultFormFields = {
       gameKey: "",
       username: "",
-      gameKeyError: false,
-      usernameError: false,
+
    };
 
+   const thrownErrors = {
+      gameKeyError: false,
+      usernameError: false,
+   }
+
    const [formFields, setFormFields] = useState(defaultFormFields);
+   const [throwError, setThrowError] = useState(thrownErrors);
 
    useEffect(() => {
       setFormFields(defaultFormFields);
-   }, [type]);
+      // eslint-disable-next-line
+   }, []);
+
+   useEffect(() => {
+      const activePlayers = players.reduce((active, player)  => {
+         if(player.gameKey != ""){
+            return active + 1;
+         }
+         return active
+      }, 0);
+
+      setActivePlayers(activePlayers);
+
+   }, [players]);
+
 
    const handleChange = (event) => {
       const value = event.target.value;
@@ -33,17 +53,18 @@ const GameForm = ({ promt, type }) => {
    };
 
    const handleSubmit = async (event) => {
+      
       event.preventDefault();
 
+      
+
       if (type === "hidden") {
-         await createGame(formFields.username, updatePlayer);
-         //Here i want to update the context
-         navigate("lobby");
+         await createGame(formFields.username, updatePlayer, updatePlayers);
+         navigate("/lobby");
       } else {
          try {
-            await joinGame(formFields.gameKey, formFields.username, player, updatePlayer);
-            //Here i want to update the context
-            navigate("lobby");
+            await joinGame(formFields.gameKey, formFields.username, updatePlayer, updatePlayers);
+            navigate("/lobby");
          } catch (error) {
             if (error.message === "Username is already in use") {
                errorHandler("usernameError");
@@ -55,15 +76,19 @@ const GameForm = ({ promt, type }) => {
       }
    };
 
+   const handleReconnect = async () => {
+      const player = JSON.parse(sessionStorage.player);
+      await reconnectGame(player, updatePlayer, updatePlayers);
+      navigate("/lobby");
+   }
+
    const errorHandler = (error) => {
-      setFormFields({
-         ...formFields,
+      setThrowError({
          [error]: true,
       });
 
       setTimeout(() => {
-         setFormFields({
-            ...formFields,
+         setThrowError({
             [error]: false,
          });
       }, 3000);
@@ -71,7 +96,7 @@ const GameForm = ({ promt, type }) => {
 
    return (
       <FormStyle onSubmit={handleSubmit}>
-         {formFields.gameKeyError && (
+         {throwError.gameKeyError && (
             <ErrorMessage error={"The game can not be found"} />
          )}
          <input
@@ -81,7 +106,7 @@ const GameForm = ({ promt, type }) => {
             onChange={handleChange}
             name="gameKey"
          />
-         {formFields.usernameError && (
+         {throwError.usernameError && (
             <ErrorMessage error={"Username is already in use"} />
          )}
          <input
@@ -90,8 +115,10 @@ const GameForm = ({ promt, type }) => {
             value={formFields.username}
             onChange={handleChange}
             name="username"
+            required
          />
          <button>{promt}</button>
+         {player.id && activePlayers > 0 && <button type="button" onClick={handleReconnect}>Reconnect</button>}
       </FormStyle>
    );
 };

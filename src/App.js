@@ -1,36 +1,25 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Index from "./pages/index";
 import { Route, Routes } from "react-router-dom";
 import Lobby from "./pages/lobby/lobby";
-import { useContext, useEffect, useState } from "react";
-import {
-   getDoc,
-   onDataChange,
-   removeDoc,
-} from "./config/firebase/firebase.config";
+import { useContext } from "react";
 import { PlayerContext } from "./context/player.context";
+import Game from "./pages/game/game";
+import { useEffect } from "react";
 
 function App() {
-   const [syncDone, setSyncDone] = useState(false);
-   const { updatePlayers, player } = useContext(PlayerContext);
-
-   const syncPlayers = async () => {
-      onDataChange("players", "gameKey", player.gameKey, updatePlayers);
-   };
+   const {updatePlayer, player} = useContext(PlayerContext);
 
    useEffect(() => {
-      if (player.gameKey !== "" && syncDone === false) {
-         setSyncDone(true);
-         syncPlayers();
-      }
-   }, [player]);
+      updatePlayer({...player, spotify: localStorage.getItem("spotify")})
+   }, [])
 
    return (
-      <Routes>
-         <Route path="/" Component={Index} />
-         <Route path="/lobby" Component={Lobby} />
-      </Routes>
+         <Routes>
+            <Route path="/" Component={Index} />
+            <Route path="/lobby" Component={Lobby} />
+            <Route path="/game" Component={Game} />
+         </Routes>
    );
 }
 
