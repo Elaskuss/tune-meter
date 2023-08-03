@@ -9,7 +9,7 @@ const Lobby = () => {
    const { players, player, updatePlayer } = useContext(PlayerContext);
    const [countdown, setCountdown] = useState(5);
    const [isCountdownActive, setIsCountdownActive] = useState(false);
-   const [playerCount, setPlayerCount] = useState(0);
+   const [readyPlayerCount, setRadyPlayerCount] = useState(0);
 
    const gameKey = player.gameKey;
 
@@ -49,8 +49,8 @@ const Lobby = () => {
       return () => clearInterval(timer);
    }, [isCountdownActive, countdown]);
 
-   const playerCounter = useCallback(() => {
-      setPlayerCount(0);
+
+   useEffect(() => {
       const readyPlayersCount = players.reduce((count, player) => {
          if (player.status === "READY") {
             return count + 1;
@@ -58,18 +58,18 @@ const Lobby = () => {
          return count;
       }, 0);
 
-      setPlayerCount(readyPlayersCount);
-   }, [players]);
+      setRadyPlayerCount(readyPlayersCount);
 
-   useEffect(() => {
-      playerCounter();
-      if (players.length === playerCount && players.length > 1) {
+      if (players.length === readyPlayersCount && players.length > 1) {
          countDownHandler(true);
-         setCountdown(5);
+
+         if(!isCountdownActive){
+            setCountdown(5);
+         }
       } else {
          countDownHandler(false);
       }
-   }, [players, playerCount, playerCounter]);
+   }, [players]);
 
    return (
       <LobbyContainer>
@@ -85,13 +85,13 @@ const Lobby = () => {
                ))}
          </PlayersContainer>
          <>
-            {playerCount === players.length && players.length > 1 ? (
+            {readyPlayerCount === players.length && players.length > 1 ? (
                <h2>Game starts in... {countdown}</h2>
             ) : (
                <h2>
                   {players.length > 1 ? (
                      <span>
-                        PLAYERS READY ({playerCount}/{players.length})
+                        PLAYERS READY ({readyPlayerCount}/{players.length})
                      </span>
                   ) : (
                      <span>YOU NEED MORE PLAYERS TO START</span>

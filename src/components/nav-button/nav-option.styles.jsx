@@ -1,26 +1,21 @@
 import styled from "styled-components";
 
 export const NavOptionStyle = styled.button`
-    display: flex;
-    margin:0.1rem; 
-    background-color: teal;
-    border:none;
+   width: 100%;
+   height: 50px;
+   color: inherit;
+   background: none;
+   border:none;
 
-    height: 50px; 
-    width: 100%;
-    
-    color: white;
-    
-    font-size: auto; 
-    justify-content: center;
-    align-items:center
+   font-size: 20px;
 
-    &.selected {
-        box-shadow: -1px 13px 9px 1px rgba(0,0,0,0.75);
-        -webkit-box-shadow: -1px 13px 9px 1px rgba(0,0,0,0.75);
-        -moz-box-shadow: -1px 13px 9px 1px rgba(0,0,0,0.75);
-    }
-    &:hover {
-        cursor: pointer;
-    }
+   &.selected{
+      border-bottom: 2px solid black;
+   }
+
+   &:hover{
+      background-color:rgba(230, 230, 230, 1);
+   }
 `;
+
+

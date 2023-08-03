@@ -12,6 +12,8 @@ import {
    requestSpotifyAccessToken,
    requestUserAuthorization,
 } from "../../config/spotify/spotify.config";
+import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
+import { AddBox } from "../../components/add/add.styles";
 
 const Index = () => {
    const { player } = useContext(PlayerContext);
@@ -25,6 +27,7 @@ const Index = () => {
 
       if (code && !sessionStorage.getItem("access_token")) {
          handleTokenFetch(code);
+         sessionStorage.setItem("refresh_code", code);
       }
 
       if (player.id) {
@@ -65,12 +68,12 @@ const Index = () => {
    return (
       <PageContainer>
          {!sessionStorage.getItem("access_token") ? (
-            <div>
+            <>
                <h1>This games requires access to your Spotify</h1>
-               <button onClick={handleSpotifyLogin}>Log In With Spotify</button>
-            </div>
+               <SpotifyLogInButton handleEvent={handleSpotifyLogin} promt={"Log In With Spotify"} />
+            </>
          ) : (
-            <div>
+            <>
                <NavOptionContainer>
                   <NavOption
                      value={"join"}
@@ -90,8 +93,9 @@ const Index = () => {
                ) : (
                   <GameForm type={"hidden"} promt={"Create Game"} />
                )}
-            </div>
+            </>
          )}
+         <AddBox></AddBox>
       </PageContainer>
    );
 };
