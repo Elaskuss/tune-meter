@@ -8,26 +8,24 @@ import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 import { useNavigate } from "react-router-dom";
 import {
-   getProfile,
    requestSpotifyAccessToken,
    requestUserAuthorization,
 } from "../../config/spotify/spotify.config";
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
-import { AddBox } from "../../components/add/add.styles";
+import { AdBox } from "../../components/ad/ad.styles";
 
 const Index = () => {
    const { player } = useContext(PlayerContext);
    const [joinGame, setJoinGame] = useState("join");
    const navigate = useNavigate();
+   const access_token = sessionStorage.getItem("access_token");
 
    useEffect(() => {
       //This is used to grab the access_code from spotify
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
-
-      if (code && !sessionStorage.getItem("access_token")) {
+      if (code && !access_token) {
          handleTokenFetch(code);
-         sessionStorage.setItem("refresh_code", code);
       }
 
       if (player.id) {
@@ -53,8 +51,6 @@ const Index = () => {
       if (event.target.value === "join") {
          document.querySelector(".join").classList.add("selected");
          document.querySelector(".host").classList.remove("selected");
-
-         getProfile();
       } else {
          document.querySelector(".host").classList.add("selected");
          document.querySelector(".join").classList.remove("selected");
@@ -67,9 +63,10 @@ const Index = () => {
 
    return (
       <PageContainer>
-         {!sessionStorage.getItem("access_token") ? (
+         {!access_token ? (
             <>
                <h1>This games requires access to your Spotify</h1>
+               <h2>YOU NEED PREMIUM</h2>
                <SpotifyLogInButton handleEvent={handleSpotifyLogin} promt={"Log In With Spotify"} />
             </>
          ) : (
@@ -95,7 +92,7 @@ const Index = () => {
                )}
             </>
          )}
-         <AddBox></AddBox>
+         <AdBox></AdBox>
       </PageContainer>
    );
 };

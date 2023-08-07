@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const AddBox = styled.div`
+export const AdBox = styled.div`
    margin-top: 50px;
    position: absolute;
    bottom: 10px;

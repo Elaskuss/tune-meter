@@ -7,27 +7,11 @@ import { GameKey, LobbyContainer, PlayersContainer } from "./lobby.styles";
 const Lobby = () => {
    const navigate = useNavigate();
    const { players, player, updatePlayer } = useContext(PlayerContext);
-   const [countdown, setCountdown] = useState(5);
+   const [countdown, setCountdown] = useState(1);
    const [isCountdownActive, setIsCountdownActive] = useState(false);
    const [readyPlayerCount, setRadyPlayerCount] = useState(0);
 
    const gameKey = player.gameKey;
-
-   window.addEventListener("beforeunload", () => {
-      const updatedPlayer = { ...player, gameKey: "" };
-      updatePlayer(updatedPlayer);
-   });
-
-   window.addEventListener("popstate", (event) => {
-      navigate("/", {replace: true});
-   });
-
-   useEffect(() => {
-      if (gameKey === "") {
-         navigate("/", { replace: true });
-      }
-      // eslint-disable-next-line
-   }, []);
 
    const countDownHandler = (value) => {
       setIsCountdownActive(value);
@@ -42,7 +26,7 @@ const Lobby = () => {
          );
       } else if (isCountdownActive && countdown === 0) {
          setIsCountdownActive(false);
-         updatePlayer({ ...player, totalPlayers: players.length });
+         updatePlayer({...player, totalPlayers: players.length });
          navigate("/game", { replace: true });
       }
 
@@ -64,7 +48,7 @@ const Lobby = () => {
          countDownHandler(true);
 
          if(!isCountdownActive){
-            setCountdown(5);
+            setCountdown(1);
          }
       } else {
          countDownHandler(false);
@@ -80,7 +64,9 @@ const Lobby = () => {
                   <Player
                      displayName={player.displayName}
                      id={player.id}
+                     key={player.id}
                      status={player.status}
+                     mute={player.mute}
                   />
                ))}
          </PlayersContainer>

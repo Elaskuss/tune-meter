@@ -9,7 +9,8 @@ import {
    query,
    onValue,
    remove,
-   off,
+   update,
+   push,
 } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 
@@ -43,21 +44,21 @@ export const getDoc = async (directory) => {
    });
 };
 
-let unsubscribe = () => {};
+let unsubscribeDataChange = () => {};
 
 export const onDataChange = async (directory, key, value, updatePlayers) => {
-  const collectionRef = ref(db, directory);
-  const q = query(collectionRef, orderByChild(key), equalTo(value));
-  
-  unsubscribe();
-  
-  unsubscribe = onValue(q, (snapshot) => {
-    const dataArray = [];
-    snapshot.forEach((childSnapshot) => {
-       dataArray.push(childSnapshot.val());
-    });
-    updatePlayers(dataArray);
-  });
+   const collectionRef = ref(db, directory);
+   const q = query(collectionRef, orderByChild(key), equalTo(value));
+
+   unsubscribeDataChange();
+
+   unsubscribeDataChange = onValue(q, (snapshot) => {
+      const dataArray = [];
+      snapshot.forEach((childSnapshot) => {
+         dataArray.push(childSnapshot.val());
+      });
+      updatePlayers(dataArray);
+   });
 };
 
 export const queryValue = async (directory, key, value) => {
@@ -86,6 +87,13 @@ export const setDoc = async (directory, data) => {
    }
 };
 
+export const addToDoc = async (directory, array, updatePlayer, player) => {
+   array.forEach((item) => {
+      push(dbRef(directory), item);
+   });
+   updatePlayer({...player, songsLoaded:true, gameActive: true});
+};
+
 export const removeDoc = async (directory) => {
    await remove(dbRef(directory));
 };
@@ -99,6 +107,11 @@ export const createPlayer = async (displayName, gameKey) => {
       status: "NOT READY",
       gameKey: gameKey,
       gameActive: false,
+      points: 0,
+      guessed: false,
+      mute: true,
+      changeSong: false,
+      round: 0,
    };
 
    sessionStorage.setItem("player", JSON.stringify(player));
@@ -127,15 +140,19 @@ export const createGame = async (displayName, updatePlayer, updatePlayers) => {
          await setDoc("lobbies/" + gameKey, { gameActive: false });
 
          updatePlayer(player);
-         onDataChange("players", "gameKey", gameKey, updatePlayers)
-
+         onDataChange("players", "gameKey", gameKey, updatePlayers);
 
          gameCreated = true;
       }
    } while (gameCreated === false);
 };
 
-export const joinGame = async (gameKey, displayName, updatePlayer, updatePlayers) => {
+export const joinGame = async (
+   gameKey,
+   displayName,
+   updatePlayer,
+   updatePlayers
+) => {
    const value = await getDoc("lobbies/" + gameKey);
 
    if (value === null) {
@@ -159,4 +176,4 @@ export const joinGame = async (gameKey, displayName, updatePlayer, updatePlayers
 export const reconnectGame = async (player, updatePlayer, updatePlayers) => {
    updatePlayer(player);
    onDataChange("players", "gameKey", player.gameKey, updatePlayers);
-}
+};

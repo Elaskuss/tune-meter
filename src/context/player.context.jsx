@@ -10,10 +10,12 @@ const INITIAL_STATE = {
       gameKey: "",
       id: "",
       status: "NOT READY",
-      points: "",
+      points: 0,
       disconnected: false,
-      spotify: "",
+      songsLoaded: false,
+      guessed: false,
    },
+   songs: [],
 };
 
 // Define your playersReducer function
@@ -29,13 +31,18 @@ const playersReducer = (state, action) => {
             ...state,
             player: action.payload,
          };
+      case "UPDATE_SONGS":
+         return {
+            ...state,
+            songs: action.payload,
+         }
       default:
          return state;
    }
 };
 
 export const PlayerProvider = ({ children }) => {
-   const [{ players, player }, dispatch] = useReducer(
+   const [{ players, player, songs }, dispatch] = useReducer(
       playersReducer,
       INITIAL_STATE
    );
@@ -47,6 +54,10 @@ export const PlayerProvider = ({ children }) => {
    const updatePlayer = (player) => {
       dispatch({ type: "UPDATE_PLAYER", payload: player});
       setDoc(`players/${player.id}`, player);
+   };
+
+   const updateSongs = (newSongs) => {
+      dispatch({ type: "UPDATE_SONGS", payload: newSongs });
    };
 
    const removePlayer = () => {
@@ -67,8 +78,10 @@ export const PlayerProvider = ({ children }) => {
       removePlayer,
       updatePlayers,
       updatePlayer,
+      updateSongs,
       players,
       player,
+      songs,
    };
 
    return (
