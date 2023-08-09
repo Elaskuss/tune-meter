@@ -10,8 +10,8 @@ const ShowPoints = () => {
       <div>
          {players.map((player) => {
             return(
-               <div>
-                  <p key={player.id}>{player.displayName}</p>
+               <div key={player.id}>
+                  <p >{player.displayName}</p>
                   <p>{player.points}</p>
                </div>
             )

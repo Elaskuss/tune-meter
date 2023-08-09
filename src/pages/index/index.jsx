@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { NavOptionContainer, PageContainer } from "./index.styles";
+import { NavBar, NavOptionContainer, PageContainer } from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import { useEffect } from "react";
 import GameForm from "../../components/game-form/game-form.component";
-import { setDoc } from "../../config/firebase/firebase.config";
+import { setDoc, updateDoc } from "../../config/firebase/firebase.config";
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 import { useNavigate } from "react-router-dom";
@@ -21,30 +21,26 @@ const Index = () => {
    const access_token = sessionStorage.getItem("access_token");
 
    useEffect(() => {
-      //This is used to grab the access_code from spotify
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
       if (code && !access_token) {
          handleTokenFetch(code);
       }
 
-      if (player.id) {
-         setDoc(`players/${player.id}`, { ...player, gameKey: "" });
-      }
-
       if (document.querySelector(".join")) {
          document.querySelector(".join").classList.add("selected");
       }
 
-      //This one is needed to clear the URL code
-      navigate("/");
+      if (sessionStorage.getItem("id")) {
+         updateDoc(`/players/${sessionStorage.getItem("id")}`, { gameKey: "" });
+      }
    }, []);
 
    const handleTokenFetch = async (code) => {
       await requestSpotifyAccessToken(code);
       //This one is needed to make sure that the token has gotten a change to be put into SessionStorage
       navigate("/");
-   }
+   };
 
    const handleClick = (event) => {
       setJoinGame(event.target.value);
@@ -67,7 +63,10 @@ const Index = () => {
             <>
                <h1>This games requires access to your Spotify</h1>
                <h2>YOU NEED PREMIUM</h2>
-               <SpotifyLogInButton handleEvent={handleSpotifyLogin} promt={"Log In With Spotify"} />
+               <SpotifyLogInButton
+                  handleEvent={handleSpotifyLogin}
+                  promt={"Log In With Spotify"}
+               />
             </>
          ) : (
             <>
@@ -85,6 +84,7 @@ const Index = () => {
                      onClick={handleClick}
                   />
                </NavOptionContainer>
+
                {joinGame === "join" ? (
                   <GameForm type={"text"} promt={"Join"} />
                ) : (

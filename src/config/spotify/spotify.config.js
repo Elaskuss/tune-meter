@@ -53,10 +53,7 @@ export function requestUserAuthorization() {
    });
 }
 
-export async function requestSpotifyAccessToken(
-   code,
-   refresh = false
-) {
+export async function requestSpotifyAccessToken(code, refresh = false) {
    const clientId = "9727e0e9618f481caf483f5c4cfda987";
    const redirectUri = "http://localhost:3000/";
 
@@ -98,7 +95,6 @@ export async function requestSpotifyAccessToken(
          localStorage.setItem("token_expires", Date.parse(oneHourLater));
          sessionStorage.setItem("access_token", data.access_token);
          sessionStorage.setItem("refresh_token", data.refresh_token);
-         
       })
       .catch((error) => {
          console.error("Error:", error);
@@ -121,7 +117,7 @@ export async function getTopTracks(player) {
    let accessToken = sessionStorage.getItem("access_token");
 
    const responseTracks = await fetch(
-      "https://api.spotify.com/v1/me/top/tracks?limit=100",
+      "https://api.spotify.com/v1/me/top/tracks?limit=10",
       {
          headers: {
             Authorization: "Bearer " + accessToken,
@@ -167,46 +163,206 @@ export async function getTopTracks(player) {
    return finalArray;
 }
 
-
-export async function getPlayerState(accessToken, market = "", additionalTypes = "") {
-   const apiUrl = 'https://api.spotify.com/v1/me/player';
+export async function getPlayerState(
+   accessToken,
+   market = "",
+   additionalTypes = ""
+) {
+   const apiUrl = "https://api.spotify.com/v1/me/player";
    let headers = {
-     'Content-Type': 'application/json',
+      "Content-Type": "application/json",
    };
- 
+
    if (accessToken) {
-     headers['Authorization'] = `Bearer ${accessToken}`;
+      headers["Authorization"] = `Bearer ${accessToken}`;
    }
- 
+
    // Prepare query parameters for the request
-   let queryParams = '';
+   let queryParams = "";
    if (market) {
-     queryParams += `market=${market}`;
+      queryParams += `market=${market}`;
    }
- 
+
    if (additionalTypes) {
-     queryParams += `${queryParams ? '&' : ''}additional_types=${additionalTypes}`;
+      queryParams += `${
+         queryParams ? "&" : ""
+      }additional_types=${additionalTypes}`;
    }
- 
+
    if (queryParams) {
-     apiUrl += `?${queryParams}`;
+      apiUrl += `?${queryParams}`;
    }
- 
+
    try {
-     const response = await fetch(apiUrl, {
-       method: 'GET',
-       headers: headers,
-     });
- 
-     if (!response.ok) {
-       throw new Error('Failed to get player state.');
-     }
- 
-     const data = await response.json();
-     return data;
+      const response = await fetch(apiUrl, {
+         method: "GET",
+         headers: headers,
+      });
+
+      if (!response.ok) {
+         throw new Error("Failed to get player state.");
+      }
+
+      const data = await response.json();
+      return data;
    } catch (error) {
-     console.error('Error while getting player state:', error.message);
-     return null;
+      console.error("Error while getting player state:", error.message);
+      return null;
    }
- }
- 
+}
+
+export async function transferPlayback(token, device_id) {
+   const url = "https://api.spotify.com/v1/me/player";
+
+   const requestOptions = {
+      method: "PUT",
+      headers: {
+         Authorization: "Bearer " + `${token}`,
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+         device_ids: [device_id],
+         play: false,
+      }),
+   };
+
+   try {
+      const response = await fetchWithRetry(url, requestOptions);
+      return response;
+   } catch (error) {
+      console.error("Error:", error);
+      return null;
+   }
+}
+export async function startPlayback(token, body = "") {
+   const url = "https://api.spotify.com/v1/me/player/play";
+   const requestOptions = {
+      method: "PUT",
+      headers: {
+         Authorization: "Bearer " + `${token}`,
+         "Content-Type": "application/json",
+      },
+      body,
+   };
+   try {
+      const response = await fetchWithRetry(url, requestOptions);
+      return response;
+   } catch (error) {
+      console.error("Error:", error);
+      return null;
+   }
+}
+export async function skipToNext(token, body = "") {
+   const url = "https://api.spotify.com/v1/me/player/play";
+   const requestOptions = {
+      method: "PUT",
+      headers: {
+         Authorization: "Bearer " + `${token}`,
+         "Content-Type": "application/json",
+      },
+      body,
+   };
+   try {
+      const response = await fetchWithRetry(url, requestOptions);
+      return response;
+   } catch (error) {
+      console.error("Error:", error);
+      return null;
+   }
+}
+
+// export async function skipToNext(token) {
+//    const url = "https://api.spotify.com/v1/me/player/next";
+//    const requestOptions = {
+//       method: "POST",
+//       headers: {
+//          Authorization: "Bearer " + `${token}`,
+//       },
+//    };
+
+//    try {
+//       const response = await fetchWithRetry(url, requestOptions);
+//       if (response.ok) {
+//          const responseData = await response.json();
+//          return responseData;
+//       } else {
+//          throw new Error("Request failed.");
+//       }
+//    } catch (error) {
+//       return null;
+//    }
+// }
+
+export async function setVolume(token, volume) {
+   const url = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volume}`;
+   const requestOptions = {
+      method: "PUT",
+      headers: {
+         Authorization: "Bearer " + `${token}`,
+      },
+   };
+   try {
+      const response = await fetchWithRetry(url, requestOptions);
+      if (response.ok) {
+         const responseData = await response.json();
+         return responseData;
+      } else {
+         throw new Error("Request failed.");
+      }
+   } catch (error) {
+      return null;
+   }
+}
+
+export async function addToFavorite(token, id) {
+   const url = "https://api.spotify.com/v1/me/tracks";
+   const requestOptions = {
+      method: "PUT",
+      headers: {
+         Authorization: "Bearer " + `${token}`,
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+         ids: [id],
+      }),
+   };
+   try {
+      const response = await fetchWithRetry(url, requestOptions);
+      if (response.ok) {
+         const responseData = await response.json();
+         return responseData;
+      } else {
+         throw new Error("Request failed.");
+      }
+   } catch (error) {
+      return null;
+   }
+}
+
+async function fetchWithRetry(
+   url,
+   requestOptions,
+   maxRetries = 10,
+   retryDelay = 300
+) {
+   let retries = 0;
+   while (retries < maxRetries) {
+      try {
+         const response = await fetch(url, requestOptions);
+         if (response.ok) {
+            return response;
+         } else {
+            throw new Error("Request failed.");
+         }
+      } catch (error) {
+         console.error("Error:", error);
+         retries++;
+         if (retries < maxRetries) {
+            console.log(`Retrying request in ${retryDelay}ms...`);
+            await new Promise((resolve) => setTimeout(resolve, retryDelay));
+         } else {
+            throw new Error("Maximum retry attempts reached.");
+         }
+      }
+   }
+}

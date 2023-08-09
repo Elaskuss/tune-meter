@@ -44,7 +44,8 @@ const Lobby = () => {
 
       setRadyPlayerCount(readyPlayersCount);
 
-      if (players.length === readyPlayersCount && players.length > 1) {
+      // if (players.length === readyPlayersCount && players.length > 1) {
+      if (players.length === readyPlayersCount) {
          countDownHandler(true);
 
          if(!isCountdownActive){
@@ -66,12 +67,12 @@ const Lobby = () => {
                      id={player.id}
                      key={player.id}
                      status={player.status}
-                     mute={player.mute}
                   />
                ))}
          </PlayersContainer>
          <>
-            {readyPlayerCount === players.length && players.length > 1 ? (
+         {readyPlayerCount === players.length ? (
+            // {readyPlayerCount === players.length && players.length > 1 ? (
                <h2>Game starts in... {countdown}</h2>
             ) : (
                <h2>

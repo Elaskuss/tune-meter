@@ -87,6 +87,14 @@ export const setDoc = async (directory, data) => {
    }
 };
 
+export const updateDoc = async (directory, data) => {
+   if (data !== undefined) {
+      update(dbRef(directory), data);
+   } else {
+      console.error("Cannot set undefined data to the database.");
+   }
+};
+
 export const addToDoc = async (directory, array, updatePlayer, player) => {
    array.forEach((item) => {
       push(dbRef(directory), item);
@@ -109,12 +117,11 @@ export const createPlayer = async (displayName, gameKey) => {
       gameActive: false,
       points: 0,
       guessed: false,
-      mute: true,
       changeSong: false,
       round: 0,
    };
 
-   sessionStorage.setItem("player", JSON.stringify(player));
+   sessionStorage.setItem("id", id);
 
    return player;
 };

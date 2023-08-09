@@ -16,6 +16,9 @@ const INITIAL_STATE = {
       guessed: false,
    },
    songs: [],
+   spotifyPlayer: {
+      current_track: {},
+   },
 };
 
 // Define your playersReducer function
@@ -35,14 +38,19 @@ const playersReducer = (state, action) => {
          return {
             ...state,
             songs: action.payload,
-         }
+         };
+      case "UPDATE_SPOTIFY_PLAYER":
+         return {
+            ...state,
+            spotifyPlayer: action.payload,
+         };
       default:
          return state;
    }
 };
 
 export const PlayerProvider = ({ children }) => {
-   const [{ players, player, songs }, dispatch] = useReducer(
+   const [{ players, player, songs, spotifyPlayer }, dispatch] = useReducer(
       playersReducer,
       INITIAL_STATE
    );
@@ -52,7 +60,7 @@ export const PlayerProvider = ({ children }) => {
    };
 
    const updatePlayer = (player) => {
-      dispatch({ type: "UPDATE_PLAYER", payload: player});
+      dispatch({ type: "UPDATE_PLAYER", payload: player });
       setDoc(`players/${player.id}`, player);
    };
 
@@ -60,28 +68,19 @@ export const PlayerProvider = ({ children }) => {
       dispatch({ type: "UPDATE_SONGS", payload: newSongs });
    };
 
-   const removePlayer = () => {
-      dispatch({ type: "UPDATE_PLAYER", payload: player });
-
-      if (player.id !== "") {
-         removeDoc(`players/${player.id}`);
-      }
-
-      const playersArray = [];
-      players.forEach((player) => {
-         playersArray.push(player.id);
-      });
-      setDoc(`lobbies/${player.gameKey}/players`, playersArray);
+   const updateSpotifyPlayer = (spotifyPlayer) => {
+      dispatch({ type: "UPDATE_SPOTIFY_PLAYER", payload: spotifyPlayer });
    };
 
    const value = {
-      removePlayer,
       updatePlayers,
       updatePlayer,
       updateSongs,
+      updateSpotifyPlayer,
       players,
       player,
       songs,
+      spotifyPlayer,
    };
 
    return (

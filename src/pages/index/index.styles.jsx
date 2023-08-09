@@ -2,9 +2,12 @@ import styled from "styled-components";
 
 export const NavOptionContainer = styled.div`
    display: flex;
-
    width: 100%;
    position: relative;
+
+   @media (min-width: 680px) {
+      width: 30vw;
+   }
 `;
 
 export const PageContainer = styled.div`
@@ -17,5 +20,5 @@ export const PageContainer = styled.div`
    @media (min-width: 680px) {
       width: 30vw;
    }
-   width: 70vw;
 `;
+

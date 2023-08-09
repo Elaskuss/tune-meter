@@ -1,6 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
+import {
+   addToFavorite,
+   skipToNext,
+   startPlayback,
+} from "../../config/spotify/spotify.config";
+import {
+   ArtistName,
+   NameContainer,
+   NextSongContainer,
+   NextTrackContainer,
+   SongInfo,
+   SongInfoContainer,
+   SongName,
+   StyledPlayerContainer,
+} from "./WebPlayback.styles";
+import NextTrack from "../../svg/NextTrack";
+import { useNavigate } from "react-router-dom";
+import Heart from "../../svg/Heart";
 
 const track = {
    name: "",
@@ -11,117 +29,140 @@ const track = {
 };
 
 function WebPlayback(props) {
-   const [is_paused, setPaused] = useState(false);
-   const [is_active, setActive] = useState(false);
-   const [player, setPlayer] = useState(undefined);
-   const [current_track, setTrack] = useState(track);
+   const { token } = props;
+   const { songs, players, updatePlayer, player, spotifyPlayer } =
+      useContext(PlayerContext);
+   const { current_track } = spotifyPlayer;
+   const [songsInitialized, setSongsInitialized] = useState(false);
+   const [showSongSkip, setShowSongSkip] = useState(false);
+   const [changeSongVote, setChangeSongVote] = useState(0);
+   const [favorite, setFavorite] = useState("none");
+
+   const handleNextSong = () => {
+      updatePlayer({ ...player, changeSong: !player.changeSong });
+   };
+
+   const handleSongs = async (uris) => {
+      const body = JSON.stringify({
+         uris: uris,
+         offset: {
+            position: player.round,
+         },
+         position_ms: 12500,
+      });
+      await startPlayback(token, body);
+      setTimeout(async () => {
+         await startPlayback(token, body);
+      }, 100);
+   };
 
    useEffect(() => {
-      const script = document.createElement("script");
-      script.src = "https://sdk.scdn.co/spotify-player.js";
-      script.async = true;
-
-      document.body.appendChild(script);
-
-      window.onSpotifyWebPlaybackSDKReady = () => {
-         const player = new window.Spotify.Player({
-            name: "Web Playback SDK",
-            getOAuthToken: (cb) => {
-               cb(props.token);
-            },
-            volume: 0.5,
+      if (songs.length && !songsInitialized) {
+         const uris = songs.map((song) => {
+            return song.uri
          });
+         handleSongs(uris);
+         setSongsInitialized(true);
+      }
+   }, [songs]);
 
-         setPlayer(player);
+   useEffect(() => {
+      const guessed = players.reduce((count, player) => {
+         if (player.guessed) {
+            return count + 1;
+         }
+         return count;
+      }, 0);
 
-         player.addListener("ready", ({ device_id }) => {
-            console.log("Ready with Device ID", device_id);
+      if (guessed === players.length) {
+         setShowSongSkip(true);
+      }
+
+      const changeSongVote = players.reduce((acc, player) => {
+         if (player.changeSong) {
+            return acc + 1;
+         }
+         return acc;
+      }, 0);
+
+      setChangeSongVote(changeSongVote);
+
+      if (changeSongVote / players.length > 0.5) {
+         updatePlayer({
+            ...player,
+            changeSong: !player.changeSong,
+            round: player.round + 1,
          });
+      }
+   }, [players]);
 
-         player.addListener("not_ready", ({ device_id }) => {
-            console.log("Device ID has gone offline", device_id);
-         });
-
-         player.addListener("player_state_changed", (state) => {
-            if (!state) {
-               return;
-            }
-
-            setTrack(state.track_window.current_track);
-            setPaused(state.paused);
-
-            player.getCurrentState().then((state) => {
-               !state ? setActive(false) : setActive(true);
+   useEffect(() => {
+      const nextSongHandler = async () => {
+         if (!player.guessed && player.round) {
+            const uris = songs.map((song) => {
+               return song.uri
             });
-         });
-
-         player.connect();
+            const body = JSON.stringify({
+               uris: uris,
+               offset: {
+                  position: player.round,
+               },
+               position_ms: 0,
+            });
+            await skipToNext(token, body);
+         }
       };
-   }, []);
 
-   if (!is_active) {
+      nextSongHandler();
+   }, [player]);
+
+   const favoriteSong = async () => {
+      await addToFavorite(token, current_track.id);
+      favorite === "#1DB954" ? setFavorite("none") : setFavorite("#1DB954");
+   }
+
+   if (!current_track.album) {
       return (
          <>
-            <div className="container">
-               <div className="main-wrapper">
-                  <b>
-                     {" "}
-                     Instance not active. Transfer your playback using your
-                     Spotify app{" "}
-                  </b>
-               </div>
-            </div>
+            <div className="container">Loading</div>
          </>
       );
    } else {
       return (
-         <>
-            <div className="container">
-               <div className="main-wrapper">
-                  <img
-                     src={current_track.album.images[0].url}
-                     className="now-playing__cover"
-                     alt=""
-                  />
+         <StyledPlayerContainer>
+            <SongInfoContainer>
+               <img src={current_track.album.images[0].url} alt="Album Cover" />
+               <NameContainer>
+                  <SongInfo>
+                     <SongName>{current_track.name}</SongName>
+                     <ArtistName>
+                        {current_track.artists.reduce((acc, artist) => {
+                           if (artist.uri != current_track.artists[0].uri) {
+                              return acc + "," + `${artist.name}`;
+                           } else {
+                              return acc;
+                           }
+                        }, `${current_track.artists[0].name}`)}
+                     </ArtistName>
+                  </SongInfo>
+                  <Heart color={favorite} onClick={favoriteSong}>Favorite</Heart>
+               </NameContainer>
+            </SongInfoContainer>
+            <NextSongContainer>
+               {showSongSkip ? (
+                  <NextTrackContainer>
+                     <NextTrack onClick={handleNextSong} />
+                  </NextTrackContainer>
+               ) : (
+                  <p>Waiting for players to guess</p>
+               )}
 
-                  <div className="now-playing__side">
-                     <div className="now-playing__name">
-                        {current_track.name}
-                     </div>
-                     <div className="now-playing__artist">
-                        {current_track.artists[0].name}
-                     </div>
-
-                     <button
-                        className="btn-spotify"
-                        onClick={() => {
-                           player.previousTrack();
-                        }}
-                     >
-                        &lt;&lt;
-                     </button>
-
-                     <button
-                        className="btn-spotify"
-                        onClick={() => {
-                           player.togglePlay();
-                        }}
-                     >
-                        {is_paused ? "PLAY" : "PAUSE"}
-                     </button>
-
-                     <button
-                        className="btn-spotify"
-                        onClick={() => {
-                           player.nextTrack();
-                        }}
-                     >
-                        &gt;&gt;
-                     </button>
-                  </div>
+               <div>
+                  {Math.ceil(players.length * 0.51) - changeSongVote} more votes
+                  needed for next round
                </div>
-            </div>
-         </>
+            </NextSongContainer>
+         </StyledPlayerContainer>
       );
    }
 }

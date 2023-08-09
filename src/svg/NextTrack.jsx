@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FastForward } from "../components/custom-player/custom-player.styles"
+import { FastForward } from "../components/WebPlayback/WebPlayback.styles"
 import { useContext } from "react";
 import { PlayerContext } from "../context/player.context";
 
