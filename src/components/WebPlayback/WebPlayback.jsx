@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 import {
-   addToFavorite,
    editFavorite,
    skipToNext,
    startPlayback,
@@ -19,20 +18,12 @@ import {
    StyledPlayerContainer,
 } from "./WebPlayback.styles";
 import NextTrack from "../../svg/NextTrack";
-import { useNavigate } from "react-router-dom";
 import Heart from "../../svg/Heart";
 
-const track = {
-   name: "",
-   album: {
-      images: [{ url: "" }],
-   },
-   artists: [{ name: "" }],
-};
 
 function WebPlayback(props) {
    const { token } = props;
-   const { songs, players, updatePlayer, player, spotifyPlayer, updateSpotifyPlayer } =
+   const { songs, players, updatePlayer, player, spotifyPlayer } =
       useContext(PlayerContext);
    const { current_track } = spotifyPlayer;
    const [songsInitialized, setSongsInitialized] = useState(false);
@@ -66,6 +57,7 @@ function WebPlayback(props) {
          handleSongs(uris);
          setSongsInitialized(true);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [songs]);
 
    useEffect(() => {
@@ -96,6 +88,7 @@ function WebPlayback(props) {
             round: player.round + 1,
          });
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [players]);
 
    useEffect(() => {
@@ -115,6 +108,7 @@ function WebPlayback(props) {
          }
       };
       nextSongHandler();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [player]);
 
    useEffect(() => {
@@ -128,6 +122,7 @@ function WebPlayback(props) {
       }
 
       checkIfFavoriteSong();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [current_track]);
 
  
@@ -155,8 +150,8 @@ function WebPlayback(props) {
                      <SongName>{current_track.name}</SongName>
                      <ArtistName>
                         {current_track.artists.reduce((acc, artist) => {
-                           if (artist.uri != current_track.artists[0].uri) {
-                              return acc + "," + `${artist.name}`;
+                           if (artist.uri !== current_track.artists[0].uri) {
+                              return acc + ` ${artist.name}`;
                            } else {
                               return acc;
                            }

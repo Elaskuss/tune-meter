@@ -1,4 +1,3 @@
-
 import Index from "./pages/index/index";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Lobby from "./pages/lobby/lobby";
@@ -75,7 +74,8 @@ function App() {
             });
          };
       }
-   }, [sessionStorage.getItem("access_token")]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [token]);
 
    useEffect(() => {
       const currentTime = new Date();
@@ -94,6 +94,7 @@ function App() {
             setVolume(token, 80);
          }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [mute]);
 
    const muteHandler = () => {

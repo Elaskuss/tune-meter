@@ -163,53 +163,6 @@ export async function getTopTracks(player) {
    return finalArray;
 }
 
-export async function getPlayerState(
-   accessToken,
-   market = "",
-   additionalTypes = ""
-) {
-   const apiUrl = "https://api.spotify.com/v1/me/player";
-   let headers = {
-      "Content-Type": "application/json",
-   };
-
-   if (accessToken) {
-      headers["Authorization"] = `Bearer ${accessToken}`;
-   }
-
-   // Prepare query parameters for the request
-   let queryParams = "";
-   if (market) {
-      queryParams += `market=${market}`;
-   }
-
-   if (additionalTypes) {
-      queryParams += `${
-         queryParams ? "&" : ""
-      }additional_types=${additionalTypes}`;
-   }
-
-   if (queryParams) {
-      apiUrl += `?${queryParams}`;
-   }
-
-   try {
-      const response = await fetch(apiUrl, {
-         method: "GET",
-         headers: headers,
-      });
-
-      if (!response.ok) {
-         throw new Error("Failed to get player state.");
-      }
-
-      const data = await response.json();
-      return data;
-   } catch (error) {
-      console.error("Error while getting player state:", error.message);
-      return null;
-   }
-}
 
 export async function transferPlayback(token, device_id) {
    const url = "https://api.spotify.com/v1/me/player";
