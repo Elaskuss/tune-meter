@@ -8,7 +8,7 @@ import ShowPoints from "../../components/show-points/show-point";
 import WebPlayback from "../../components/WebPlayback/WebPlayback";
 
 const Game = () => {
-   const { player, updateSongs, players, songs, updatePlayer } =
+   const { player, updateSongs, players, songs, updatePlayer, } =
       useContext(PlayerContext);
    const token = sessionStorage.getItem("access_token");
    const [songsLoaded, setSongsLoaded] = useState(false);
@@ -91,12 +91,14 @@ const Game = () => {
 
       if (player.round > currentRound) {
          setShowPoints(true);
-         setTimeout(async () => {
-            setShowPoints(false);
+         setTimeout(() => {
             setCurrentRound(player.round);
             setTimeout(() => {
                updatePlayer({ ...player, guessed: false });
             }, 300)
+            setTimeout(() => {
+               setShowPoints(false);
+            }, 400)
          }, 5000);
       }
    }, [players]);
@@ -117,7 +119,7 @@ const Game = () => {
                      />
                   ))}
                </div>
-               <div hidden={!player.guessed}>
+               <div hidden={!player.guessed && !showPoints}>
                   <WebPlayback token={token} />
                </div>
             </div>

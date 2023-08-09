@@ -3,8 +3,10 @@ import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 import {
    addToFavorite,
+   editFavorite,
    skipToNext,
    startPlayback,
+   trackInFavorite,
 } from "../../config/spotify/spotify.config";
 import {
    ArtistName,
@@ -30,7 +32,7 @@ const track = {
 
 function WebPlayback(props) {
    const { token } = props;
-   const { songs, players, updatePlayer, player, spotifyPlayer } =
+   const { songs, players, updatePlayer, player, spotifyPlayer, updateSpotifyPlayer } =
       useContext(PlayerContext);
    const { current_track } = spotifyPlayer;
    const [songsInitialized, setSongsInitialized] = useState(false);
@@ -48,7 +50,7 @@ function WebPlayback(props) {
          offset: {
             position: player.round,
          },
-         position_ms: 12500,
+         position_ms: 0,
       });
       await startPlayback(token, body);
       setTimeout(async () => {
@@ -112,16 +114,32 @@ function WebPlayback(props) {
             await skipToNext(token, body);
          }
       };
-
       nextSongHandler();
    }, [player]);
 
+   useEffect(() => {
+      const checkIfFavoriteSong = async () => {
+         if(current_track.id){
+            const isFavorite = await trackInFavorite(token, current_track.id);
+            console.log("_______________________________________________________")
+            console.log(isFavorite);
+            isFavorite[0] ? setFavorite("#1DB954") : setFavorite("none");
+         }
+      }
+
+      checkIfFavoriteSong();
+   }, [current_track]);
+
+ 
+
    const favoriteSong = async () => {
-      await addToFavorite(token, current_track.id);
+      let method;
+      favorite === "#1DB954" ? method = "DELETE" : method = "PUT";
+      await editFavorite(token, current_track.id, method);
       favorite === "#1DB954" ? setFavorite("none") : setFavorite("#1DB954");
    }
 
-   if (!current_track.album) {
+   if (!current_track.id) {
       return (
          <>
             <div className="container">Loading</div>
