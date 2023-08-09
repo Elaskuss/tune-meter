@@ -29,7 +29,11 @@ async function generateCodeChallenge(codeVerifier) {
 export function requestUserAuthorization() {
    const clientId = "9727e0e9618f481caf483f5c4cfda987";
    const currentHref = window.location.href;
+   sessionStorage.setItem("redirect_url", currentHref);
    const redirectUri = currentHref;
+   setTimeout(async() => {
+      console.log("hej");
+   }, 10000)
    let codeVerifier = generateRandomString(128);
 
    generateCodeChallenge(codeVerifier).then((codeChallenge) => {
@@ -55,8 +59,7 @@ export function requestUserAuthorization() {
 
 export async function requestSpotifyAccessToken(code, refresh = false) {
    const clientId = "9727e0e9618f481caf483f5c4cfda987";
-   const currentHref = window.location.href;
-   const redirectUri = currentHref;
+   const redirectUri = sessionStorage.getItem("redirect_url");
 
    let codeVerifier = sessionStorage.getItem("code_verifier");
 
