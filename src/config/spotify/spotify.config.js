@@ -55,7 +55,8 @@ export function requestUserAuthorization() {
 
 export async function requestSpotifyAccessToken(code, refresh = false) {
    const clientId = "9727e0e9618f481caf483f5c4cfda987";
-   const redirectUri = "http://localhost:3000/";
+   const currentHref = window.location.href;
+   const redirectUri = currentHref;
 
    let codeVerifier = sessionStorage.getItem("code_verifier");
 
