@@ -28,8 +28,8 @@ async function generateCodeChallenge(codeVerifier) {
 
 export function requestUserAuthorization() {
    const clientId = "9727e0e9618f481caf483f5c4cfda987";
-   const redirectUri = "http://localhost:3000/";
-
+   const currentHref = window.location.href;
+   const redirectUri = currentHref;
    let codeVerifier = generateRandomString(128);
 
    generateCodeChallenge(codeVerifier).then((codeChallenge) => {
