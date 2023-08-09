@@ -1,11 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 import { PlayerContainer } from "./player.styles";
-import { setVolume } from "../../config/spotify/spotify.config";
-import { useState } from "react";
 
 const Player = ({displayName, id, status}) => {
-   const token = sessionStorage.getItem("access_token"); 
    const {updatePlayer, player} = useContext(PlayerContext);
 
    const notReady = {...player, status: "NOT READY" };

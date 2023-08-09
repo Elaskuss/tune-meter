@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { NavBar, NavOptionContainer, PageContainer } from "./index.styles";
+import { NavOptionContainer, PageContainer } from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import { useEffect } from "react";
 import GameForm from "../../components/game-form/game-form.component";
-import { setDoc, updateDoc } from "../../config/firebase/firebase.config";
-import { useContext } from "react";
-import { PlayerContext } from "../../context/player.context";
+import { updateDoc } from "../../config/firebase/firebase.config";
 import { useNavigate } from "react-router-dom";
 import {
    requestSpotifyAccessToken,
@@ -15,7 +13,6 @@ import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-l
 import { AdBox } from "../../components/ad/ad.styles";
 
 const Index = () => {
-   const { player } = useContext(PlayerContext);
    const [joinGame, setJoinGame] = useState("join");
    const navigate = useNavigate();
    const access_token = sessionStorage.getItem("access_token");
@@ -34,6 +31,7 @@ const Index = () => {
       if (sessionStorage.getItem("id")) {
          updateDoc(`/players/${sessionStorage.getItem("id")}`, { gameKey: "" });
       }
+      // eslint-disable-next-line
    }, []);
 
    const handleTokenFetch = async (code) => {

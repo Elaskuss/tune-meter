@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
-import { update } from "firebase/database";
 import GuessThePlayer from "./guess-player.styles";
 
 const GuessPlayer = ({ song, playerInfo, ...otherProps }) => {

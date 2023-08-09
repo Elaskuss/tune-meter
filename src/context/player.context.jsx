@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { removeDoc, setDoc } from "../config/firebase/firebase.config";
+import { setDoc } from "../config/firebase/firebase.config";
 
 export const PlayerContext = createContext();
 

@@ -103,7 +103,8 @@ const Game = () => {
             }, 400);
          }, 5000);
       }
-   }, [players, setSongsLoaded, setShowPoints, setCurrentRound]);
+      // eslint-disable-next-line
+   }, [players]);
 
    return (
       <div>

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 import Player from "../../components/player/player.component";
@@ -31,6 +31,7 @@ const Lobby = () => {
       }
 
       return () => clearInterval(timer);
+      // eslint-disable-next-line
    }, [isCountdownActive, countdown]);
 
 
@@ -54,6 +55,7 @@ const Lobby = () => {
       } else {
          countDownHandler(false);
       }
+      // eslint-disable-next-line
    }, [players]);
 
    return (

@@ -117,7 +117,7 @@ export async function getTopTracks(player) {
    let accessToken = sessionStorage.getItem("access_token");
 
    const responseTracks = await fetch(
-      "https://api.spotify.com/v1/me/top/tracks?limit=10",
+      "https://api.spotify.com/v1/me/top/tracks?limit=30",
       {
          headers: {
             Authorization: "Bearer " + accessToken,
@@ -170,7 +170,7 @@ export async function transferPlayback(token, device_id) {
    const requestOptions = {
       method: "PUT",
       headers: {
-         Authorization: "Bearer " + `${token}`,
+         Authorization: `Bearer ${token}`,
          "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -192,7 +192,7 @@ export async function startPlayback(token, body = "") {
    const requestOptions = {
       method: "PUT",
       headers: {
-         Authorization: "Bearer " + `${token}`,
+         Authorization: `Bearer ${token}`,
          "Content-Type": "application/json",
       },
       body,
@@ -210,7 +210,7 @@ export async function skipToNext(token, body = "") {
    const requestOptions = {
       method: "PUT",
       headers: {
-         Authorization: "Bearer " + `${token}`,
+         Authorization: `Bearer ${token}`,
          "Content-Type": "application/json",
       },
       body,
@@ -253,7 +253,7 @@ export async function setVolume(token, volume) {
    const requestOptions = {
       method: "PUT",
       headers: {
-         Authorization: "Bearer " + `${token}`,
+         Authorization: `Bearer ${token}`,
       },
    };
    try {
@@ -274,7 +274,7 @@ export async function editFavorite(token, id, method = "DELETE") {
    const requestOptions = {
       method: method,
       headers: {
-         Authorization: "Bearer " + `${token}`,
+         Authorization: `Bearer ${token}`,
          "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -299,7 +299,7 @@ export async function trackInFavorite(token, id) {
    const requestOptions = {
       method: "GET",
       headers: {
-         Authorization: "Bearer " + `${token}`,
+         Authorization: `Bearer ${token}`,
          "Content-Type": "application/json",
       },
    };
