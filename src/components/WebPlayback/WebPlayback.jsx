@@ -4,6 +4,7 @@ import { PlayerContext } from "../../context/player.context";
 import {
    editFavorite,
    skipToNext,
+   spotifyApi,
    startPlayback,
    trackInFavorite,
 } from "../../config/spotify/spotify.config";
@@ -19,21 +20,24 @@ import {
 } from "./WebPlayback.styles";
 import NextTrack from "../../svg/NextTrack";
 import Heart from "../../svg/Heart";
-
+import { useMemo } from "react";
+import { useRef } from "react";
 
 function WebPlayback(props) {
    const { token } = props;
    const { songs, players, updatePlayer, player, spotifyPlayer } =
       useContext(PlayerContext);
-   const { current_track } = spotifyPlayer;
    const [songsInitialized, setSongsInitialized] = useState(false);
    const [showSongSkip, setShowSongSkip] = useState(false);
    const [changeSongVote, setChangeSongVote] = useState(0);
    const [favorite, setFavorite] = useState("none");
+   const [finishedLoading, setFinishedLoading] = useState(false);
 
    const handleNextSong = () => {
       updatePlayer({ ...player, changeSong: !player.changeSong });
    };
+
+   console.log("hej");
 
    const handleSongs = async (uris) => {
       const body = JSON.stringify({
@@ -47,12 +51,31 @@ function WebPlayback(props) {
       setTimeout(async () => {
          await startPlayback(token, body);
       }, 100);
+
+      let actionTimer = null;
+      let songUri = songs[player.round].uri;
+      spotifyPlayer.addListener("player_state_changed", (state) => {
+         if (state.track_window.current_track.uri === songUri) {
+            console.log("New Song");
+            if (actionTimer) {
+               clearTimeout(actionTimer); // Clear the previous timer
+            }
+            actionTimer = setTimeout(() => {
+               console.log(state);
+               songUri = "";
+               setFinishedLoading(true);
+               setTimeout(() => {
+                  spotifyPlayer.resume();
+               }, 500)
+            }, 500);
+         }
+      });
    };
 
    useEffect(() => {
-      if (songs.length && !songsInitialized) {
+      if (songs[0] && !songsInitialized) {
          const uris = songs.map((song) => {
-            return song.uri
+            return song.uri;
          });
          handleSongs(uris);
          setSongsInitialized(true);
@@ -94,17 +117,7 @@ function WebPlayback(props) {
    useEffect(() => {
       const nextSongHandler = async () => {
          if (!player.guessed && player.round) {
-            const uris = songs.map((song) => {
-               return song.uri
-            });
-            const body = JSON.stringify({
-               uris: uris,
-               offset: {
-                  position: player.round,
-               },
-               position_ms: 0,
-            });
-            await skipToNext(token, body);
+            await spotifyApi(spotifyPlayer.nextTrack());
          }
       };
       nextSongHandler();
@@ -112,29 +125,35 @@ function WebPlayback(props) {
    }, [player]);
 
    useEffect(() => {
+      if (finishedLoading) {
+         spotifyApi(spotifyPlayer.seek(12 * 1000));
+         setFinishedLoading(false);
+      }
+   }, [finishedLoading]);
+
+   useEffect(() => {
       const checkIfFavoriteSong = async () => {
-         if(current_track.id){
-            const isFavorite = await trackInFavorite(token, current_track.id);
-            console.log("_______________________________________________________")
-            console.log(isFavorite);
+         if (songs[player.round].id) {
+            const isFavorite = await trackInFavorite(
+               token,
+               songs[player.round].id
+            );
             isFavorite[0] ? setFavorite("#1DB954") : setFavorite("none");
          }
-      }
+      };
 
       checkIfFavoriteSong();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [current_track]);
-
- 
+   }, [player.round]);
 
    const favoriteSong = async () => {
       let method;
-      favorite === "#1DB954" ? method = "DELETE" : method = "PUT";
-      await editFavorite(token, current_track.id, method);
+      favorite === "#1DB954" ? (method = "DELETE") : (method = "PUT");
+      await editFavorite(token, songs[player.round].id, method);
       favorite === "#1DB954" ? setFavorite("none") : setFavorite("#1DB954");
-   }
+   };
 
-   if (!current_track.id) {
+   if (!songs[0]) {
       return (
          <>
             <div className="container">Loading</div>
@@ -144,21 +163,28 @@ function WebPlayback(props) {
       return (
          <StyledPlayerContainer>
             <SongInfoContainer>
-               <img src={current_track.album.images[0].url} alt="Album Cover" />
+               <img
+                  src={songs[player.round].album.images[1].url}
+                  alt="Album Cover"
+               />
                <NameContainer>
                   <SongInfo>
-                     <SongName>{current_track.name}</SongName>
+                     <SongName>{songs[player.round].name}</SongName>
                      <ArtistName>
-                        {current_track.artists.reduce((acc, artist) => {
-                           if (artist.uri !== current_track.artists[0].uri) {
+                        {songs[player.round].artists.reduce((acc, artist) => {
+                           if (
+                              artist.uri !== songs[player.round].artists[0].uri
+                           ) {
                               return acc + ` ${artist.name}`;
                            } else {
                               return acc;
                            }
-                        }, `${current_track.artists[0].name}`)}
+                        }, `${songs[player.round].artists[0].name}`)}
                      </ArtistName>
                   </SongInfo>
-                  <Heart color={favorite} onClick={favoriteSong}>Favorite</Heart>
+                  <Heart color={favorite} onClick={favoriteSong}>
+                     Favorite
+                  </Heart>
                </NameContainer>
             </SongInfoContainer>
             <NextSongContainer>

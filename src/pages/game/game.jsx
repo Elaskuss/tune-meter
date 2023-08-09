@@ -77,7 +77,8 @@ const Game = () => {
       } else {
          upploadAllSongsToFirebase();
       }
-   }, [songsLoaded, player, updatePlayer, updateSongs]);
+      // eslint-disable-next-line
+   }, [songsLoaded]);
 
    useEffect(() => {
       const totalLoadedSongs = players.reduce((count, player) => {

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import {
    requestSpotifyAccessToken,
    setVolume,
+   spotifyApi,
    transferPlayback,
 } from "./config/spotify/spotify.config";
 import Mute from "./svg/Mute";
@@ -57,19 +58,11 @@ function App() {
 
             player.addListener("player_state_changed", (state) => {
                const current_track = state.track_window.current_track;
-               if (current_track) {
-                  updateSpotifyPlayer({
-                     ...spotifyPlayer,
-                     current_track: current_track,
-                  });
-               }
             });
 
             player.connect().then((success) => {
                if (success) {
-                  console.log(
-                     "The Web Playback SDK successfully connected to Spotify!"
-                  );
+                  updateSpotifyPlayer(player);
                }
             });
          };
@@ -87,12 +80,14 @@ function App() {
    }, []);
 
    useEffect(() => {
-      if (token) {
-         if (mute) {
-            setVolume(token, 0);
-         } else {
-            setVolume(token, 80);
-         }
+      if (spotifyPlayer) {
+         setTimeout(() => {
+            if (mute) {
+               spotifyApi(spotifyPlayer.setVolume(0));
+            } else {
+               spotifyApi(spotifyPlayer.setVolume(0.8));
+            }
+         }, 2000)
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [mute]);

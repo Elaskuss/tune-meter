@@ -167,7 +167,6 @@ export async function getTopTracks(player) {
    return finalArray;
 }
 
-
 export async function transferPlayback(token, device_id) {
    const url = "https://api.spotify.com/v1/me/player";
 
@@ -191,6 +190,7 @@ export async function transferPlayback(token, device_id) {
       return null;
    }
 }
+
 export async function startPlayback(token, body = "") {
    const url = "https://api.spotify.com/v1/me/player/play";
    const requestOptions = {
@@ -209,26 +209,25 @@ export async function startPlayback(token, body = "") {
       return null;
    }
 }
-export async function skipToNext(token, body = "") {
-   const url = "https://api.spotify.com/v1/me/player/play";
-   const requestOptions = {
-      method: "PUT",
-      headers: {
-         Authorization: `Bearer ${token}`,
-         "Content-Type": "application/json",
-      },
-      body,
-   };
-   try {
-      const response = await fetchWithRetry(url, requestOptions);
-      return response;
-   } catch (error) {
-      console.error("Error:", error);
-      return null;
-   }
-}
 
-
+// export async function skipToNext(token, body = "") {
+//    const url = "https://api.spotify.com/v1/me/player/play";
+//    const requestOptions = {
+//       method: "PUT",
+//       headers: {
+//          Authorization: `Bearer ${token}`,
+//          "Content-Type": "application/json",
+//       },
+//       body,
+//    };
+//    try {
+//       const response = await fetchWithRetry(url, requestOptions);
+//       return response;
+//    } catch (error) {
+//       console.error("Error:", error);
+//       return null;
+//    }
+// }
 
 // export async function skipToNext(token) {
 //    const url = "https://api.spotify.com/v1/me/player/next";
@@ -252,26 +251,26 @@ export async function skipToNext(token, body = "") {
 //    }
 // }
 
-export async function setVolume(token, volume) {
-   const url = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volume}`;
-   const requestOptions = {
-      method: "PUT",
-      headers: {
-         Authorization: `Bearer ${token}`,
-      },
-   };
-   try {
-      const response = await fetchWithRetry(url, requestOptions);
-      if (response.ok) {
-         const responseData = await response.json();
-         return responseData;
-      } else {
-         throw new Error("Request failed.");
-      }
-   } catch (error) {
-      return null;
-   }
-}
+// export async function setVolume(token, volume) {
+//    const url = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volume}`;
+//    const requestOptions = {
+//       method: "PUT",
+//       headers: {
+//          Authorization: `Bearer ${token}`,
+//       },
+//    };
+//    try {
+//       const response = await fetchWithRetry(url, requestOptions);
+//       if (response.ok) {
+//          const responseData = await response.json();
+//          return responseData;
+//       } else {
+//          throw new Error("Request failed.");
+//       }
+//    } catch (error) {
+//       return null;
+//    }
+// }
 
 export async function editFavorite(token, id, method = "DELETE") {
    const url = "https://api.spotify.com/v1/me/tracks";
@@ -348,3 +347,29 @@ async function fetchWithRetry(
       }
    }
 }
+
+
+export async function spotifyApi(operation) {
+   const maxRetries = 10;
+   const intervalMs = 300;
+ 
+   let retries = 0;
+   
+   while (retries < maxRetries) {
+     try {
+       const result = await operation;
+       console.log("Nice");
+       return result; // Operation succeeded, return the result
+     } catch (error) {
+       if (error) {
+         retries++;
+         console.log(`Retry attempt ${retries} failed with error: ${error.message}`);
+         await new Promise(resolve => setTimeout(resolve, intervalMs));
+       } else {
+         throw error; // Re-throw if it's not a Spotify-specific error
+       }
+     }
+   }
+ 
+   throw new Error(`Operation failed after ${maxRetries} retries`);
+ }

@@ -14,11 +14,10 @@ const INITIAL_STATE = {
       disconnected: false,
       songsLoaded: false,
       guessed: false,
+      round: 0,
    },
-   songs: [],
-   spotifyPlayer: {
-      current_track: {},
-   },
+   songs: [false],
+   spotifyPlayer: null,
 };
 
 // Define your playersReducer function
