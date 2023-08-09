@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
 import {
    editFavorite,
-   skipToNext,
    spotifyApi,
    startPlayback,
    trackInFavorite,
@@ -20,8 +19,6 @@ import {
 } from "./WebPlayback.styles";
 import NextTrack from "../../svg/NextTrack";
 import Heart from "../../svg/Heart";
-import { useMemo } from "react";
-import { useRef } from "react";
 
 function WebPlayback(props) {
    const { token } = props;
@@ -111,7 +108,7 @@ function WebPlayback(props) {
             round: player.round + 1,
          });
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line
    }, [players]);
 
    useEffect(() => {
@@ -121,7 +118,7 @@ function WebPlayback(props) {
          }
       };
       nextSongHandler();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line
    }, [player]);
 
    useEffect(() => {
@@ -129,6 +126,7 @@ function WebPlayback(props) {
          spotifyApi(spotifyPlayer.seek(12 * 1000));
          setFinishedLoading(false);
       }
+      // eslint-disable-next-line 
    }, [finishedLoading]);
 
    useEffect(() => {
@@ -143,7 +141,7 @@ function WebPlayback(props) {
       };
 
       checkIfFavoriteSong();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line
    }, [player.round]);
 
    const favoriteSong = async () => {

@@ -7,7 +7,6 @@ import Game from "./pages/game/game";
 import { useEffect } from "react";
 import {
    requestSpotifyAccessToken,
-   setVolume,
    spotifyApi,
    transferPlayback,
 } from "./config/spotify/spotify.config";
@@ -54,10 +53,6 @@ function App() {
 
             player.addListener("not_ready", ({ device_id }) => {
                console.log("Device ID has gone offline", device_id);
-            });
-
-            player.addListener("player_state_changed", (state) => {
-               const current_track = state.track_window.current_track;
             });
 
             player.connect().then((success) => {

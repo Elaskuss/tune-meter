@@ -6,7 +6,7 @@ import { GameKey, LobbyContainer, PlayersContainer } from "./lobby.styles";
 
 const Lobby = () => {
    const navigate = useNavigate();
-   const { players, player, updatePlayer, spotifyPlayer } = useContext(PlayerContext);
+   const { players, player, updatePlayer } = useContext(PlayerContext);
    const [countdown, setCountdown] = useState(1);
    const [isCountdownActive, setIsCountdownActive] = useState(false);
    const [readyPlayerCount, setRadyPlayerCount] = useState(0);
