@@ -12,10 +12,11 @@ import {
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
 import { PlayerContext } from "../../context/player.context";
 
-const Index = ({autoPlay}) => {
+const Index = ({ autoPlay }) => {
    const [joinGame, setJoinGame] = useState("join");
    const navigate = useNavigate();
-   const {spotifyPlayer} = useContext(PlayerContext);
+   const { spotifyPlayer } = useContext(PlayerContext);
+   const [autoPlayActive, setAutoPlayActive] = useState(false);
    const access_token = sessionStorage.getItem("access_token");
 
    useEffect(() => {
@@ -57,8 +58,12 @@ const Index = ({autoPlay}) => {
    };
 
    const handleAutoPlay = () => {
-      spotifyPlayer.activateElement();
-   }
+      spotifyPlayer.activateElement().then(() => {
+         spotifyPlayer.resume().then(() => {
+            setAutoPlayActive(true);
+         })
+      }, 200)
+   };
 
    return (
       <PageContainer>
@@ -95,7 +100,9 @@ const Index = ({autoPlay}) => {
                )}
             </>
          )}
-         {autoPlay && <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>}
+         {(autoPlay && !autoPlayActive) && (
+            <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>
+         )}
       </PageContainer>
    );
 };

@@ -6,8 +6,10 @@ import { PlayerContext } from "./context/player.context";
 import Game from "./pages/game/game";
 import { useEffect } from "react";
 import {
+   getLobbyTrack,
    requestSpotifyAccessToken,
    spotifyApi,
+   startPlayback,
    transferPlayback,
 } from "./config/spotify/spotify.config";
 import Mute from "./svg/Mute";
@@ -20,7 +22,7 @@ function App() {
       useContext(PlayerContext);
    const refresh_token = sessionStorage.getItem("refresh_token");
    const token_expires = localStorage.getItem("token_expires");
-   const [mute, setMute] = useState(true);
+   const [mute, setMute] = useState(false);
    const [autoPlayFailed, setAutoPlayFailed] = useState(false);
    const token = sessionStorage.getItem("access_token");
 
@@ -44,12 +46,27 @@ function App() {
                getOAuthToken: (cb) => {
                   cb(token);
                },
-               volume: 0.5,
+               volume: 0,
                enableMediaSession: true,
             });
 
             player.addListener("ready", async ({ device_id }) => {
-               await transferPlayback(token, device_id);
+               transferPlayback(token, device_id).then(() => {
+                  setTimeout(() => {
+                     getLobbyTrack(token).then(track => {
+                        const body = JSON.stringify({
+                           uris: [track.uri],
+                           position_ms: 0,
+                        });
+                        startPlayback(token, body).then(() => {
+                           setTimeout(() => {
+                              player.setVolume(0.1);
+                           }, 500)
+                        });
+                     });
+                  }, 200)
+               })
+
             });
 
             player.addListener("not_ready", ({ device_id }) => {
@@ -90,9 +107,9 @@ function App() {
             if (mute) {
                spotifyApi(spotifyPlayer.setVolume(0));
             } else {
-               spotifyApi(spotifyPlayer.setVolume(0.8));
+               spotifyApi(spotifyPlayer.setVolume(0.2));
             }
-         }, 2000);
+         }, 200);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [mute]);

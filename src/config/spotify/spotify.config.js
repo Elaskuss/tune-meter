@@ -191,6 +191,26 @@ export async function transferPlayback(token, device_id) {
    }
 }
 
+export async function getLobbyTrack(token) {
+   const url = "https://api.spotify.com/v1/tracks/3khEEPRyBeOUabbmOPJzAG";
+
+   const requestOptions = {
+      method: "GET",
+      headers: {
+         Authorization: `Bearer ${token}`,
+         "Content-Type": "application/json",
+      }
+   };
+
+   try {
+      const response = await fetchWithRetry(url, requestOptions);
+      return response.json();
+   } catch (error) {
+      console.error("Error:", error);
+      return null;
+   }
+}
+
 export async function startPlayback(token, body = "") {
    const url = "https://api.spotify.com/v1/me/player/play";
    const requestOptions = {
