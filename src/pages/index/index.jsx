@@ -6,9 +6,11 @@ import GameForm from "../../components/game-form/game-form.component";
 import { updateDoc } from "../../config/firebase/firebase.config";
 import { useNavigate } from "react-router-dom";
 import {
+   getLobbyTrack,
    requestSpotifyAccessToken,
    requestUserAuthorization,
    spotifyApi,
+   startPlayback,
 } from "../../config/spotify/spotify.config";
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
 import { PlayerContext } from "../../context/player.context";
@@ -19,6 +21,8 @@ const Index = ({ autoPlay }) => {
    const { spotifyPlayer } = useContext(PlayerContext);
    const [autoPlayActive, setAutoPlayActive] = useState(false);
    const access_token = sessionStorage.getItem("access_token");
+
+
 
    useEffect(() => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -60,9 +64,22 @@ const Index = ({ autoPlay }) => {
 
    const handleAutoPlay = () => {
       spotifyApi(spotifyPlayer.activateElement()).then(() => {
-         spotifyApi(spotifyPlayer.resume()).then(() => {
-            setAutoPlayActive(true);
-         });
+         setTimeout(() => {
+            getLobbyTrack(access_token).then((track) => {
+               const body = JSON.stringify({
+                  uris: [track.uri],
+                  position_ms: 0,
+               });
+               startPlayback(access_token, body).then(() => {
+                  spotifyApi(spotifyPlayer.resume()).then(() => {
+                     setAutoPlayActive(true);
+                     setTimeout(() => {
+                        spotifyPlayer.setVolume(0.1);
+                     }, 500);
+                  });
+               });
+            });
+         }, 200);
       }, 2000);
    };
 
