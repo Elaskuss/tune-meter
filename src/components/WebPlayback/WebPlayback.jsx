@@ -131,7 +131,9 @@ function WebPlayback(props) {
    useEffect(() => {
       const fastForward = async () => {
          spotifyApi(spotifyPlayer.seek(12 * 1000)).then(() => {
-            spotifyApi(spotifyPlayer.setVolume(0.5));
+            if(toggleVolume){
+               spotifyApi(spotifyPlayer.setVolume(0.5));
+            }
          });
          setToggleVolume(false);
          setFinishedLoading(false);

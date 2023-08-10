@@ -61,7 +61,7 @@ const Index = ({ autoPlay }) => {
    };
 
    useEffect(() => {
-      if(!autoPlay && autoPlayActive){
+      if (!autoPlay && autoPlayActive) {
          spotifyApi(spotifyPlayer.activateElement()).then(() => {
             getLobbyTrack(access_token).then((track) => {
                const body = JSON.stringify({
@@ -70,15 +70,15 @@ const Index = ({ autoPlay }) => {
                });
                startPlayback(access_token, body).then(() => {
                   spotifyApi(spotifyPlayer.resume()).then(() => {
-                     
                      setTimeout(() => {
-                        spotifyPlayer.setVolume(0.5);
+                        spotifyApi(spotifyPlayer.setVolume(0.5));
                      }, 200);
                   });
                });
             });
          });
       }
+      // eslint-disable-next-line
    }, [autoPlay, autoPlayActive]);
 
    const handleAutoPlay = () => {
