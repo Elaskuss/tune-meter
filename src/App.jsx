@@ -21,6 +21,7 @@ function App() {
    const refresh_token = sessionStorage.getItem("refresh_token");
    const token_expires = localStorage.getItem("token_expires");
    const [mute, setMute] = useState(true);
+   const [autoPlayFailed, setAutoPlayFailed] = useState(false);
    const token = sessionStorage.getItem("access_token");
 
    useEffect(() => {
@@ -55,6 +56,10 @@ function App() {
                console.log("Device ID has gone offline", device_id);
             });
 
+            player.addListener('autoplay_failed', () => {
+               setAutoPlayFailed(true);
+             });
+
             player.connect().then((success) => {
                if (success) {
                   updateSpotifyPlayer(player);
@@ -82,7 +87,7 @@ function App() {
             } else {
                spotifyApi(spotifyPlayer.setVolume(0.8));
             }
-         }, 2000)
+         }, 2000);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [mute]);
@@ -93,15 +98,17 @@ function App() {
 
    return (
       <>
-         <div id="volume">
-            {mute ? (
-               <Mute onClick={muteHandler} />
-            ) : (
-               <Volume onClick={muteHandler} />
-            )}
-         </div>
+         {token && (
+            <div id="volume">
+               {mute ? (
+                  <Mute onClick={muteHandler} />
+               ) : (
+                  <Volume onClick={muteHandler} />
+               )}
+            </div>
+         )}
          <Routes>
-            <Route path="/" Component={Index} />
+            <Route path="/" autPlay={autoPlayFailed} Component={Index} />
             <Route path="/lobby" Component={Lobby} />
             <Route path="/game" Component={Game} />
          </Routes>

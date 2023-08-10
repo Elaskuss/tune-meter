@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavOptionContainer, PageContainer } from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import { useEffect } from "react";
@@ -11,10 +11,12 @@ import {
 } from "../../config/spotify/spotify.config";
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
 import { AdBox } from "../../components/ad/ad.styles";
+import { PlayerContext } from "../../context/player.context";
 
-const Index = () => {
+const Index = ( {autoPlay}) => {
    const [joinGame, setJoinGame] = useState("join");
    const navigate = useNavigate();
+   const {spotifyPlayer} = useContext(PlayerContext);
    const access_token = sessionStorage.getItem("access_token");
 
    useEffect(() => {
@@ -55,6 +57,10 @@ const Index = () => {
       requestUserAuthorization();
    };
 
+   const handleAutoPlay = () => {
+      spotifyPlayer.activateElement();
+   }
+
    return (
       <PageContainer>
          {!access_token ? (
@@ -90,6 +96,7 @@ const Index = () => {
                )}
             </>
          )}
+         {autoPlay && <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>}
          <AdBox></AdBox>
       </PageContainer>
    );

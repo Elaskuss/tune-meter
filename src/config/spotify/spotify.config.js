@@ -178,7 +178,7 @@ export async function transferPlayback(token, device_id) {
       },
       body: JSON.stringify({
          device_ids: [device_id],
-         play: false,
+         play: true,
       }),
    };
 
