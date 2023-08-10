@@ -108,6 +108,8 @@ const Game = () => {
       // eslint-disable-next-line
    }, [players]);
 
+   console.log(player.guessed);
+
    return (
       <GameContainer>
          <Title>Whos that Spotify?</Title>
@@ -115,7 +117,7 @@ const Game = () => {
             <ShowPoints />
          ) : (
             <>
-               {!player.guessed ? (
+               <div hidden={player.guessed}>
                   <GuessPlayerContainer>
                      {players.map((player) => (
                         <GuessPlayer
@@ -125,9 +127,10 @@ const Game = () => {
                         />
                      ))}
                   </GuessPlayerContainer>
-               ) : (
+               </div>
+               <div hidden={!player.guessed}>
                   <WebPlayback token={token} />
-               )}
+               </div>
             </>
          )}
       </GameContainer>

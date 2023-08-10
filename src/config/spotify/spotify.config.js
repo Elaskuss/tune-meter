@@ -31,9 +31,6 @@ export function requestUserAuthorization() {
    const currentHref = window.location.href;
    sessionStorage.setItem("redirect_url", currentHref);
    const redirectUri = currentHref;
-   setTimeout(async() => {
-      console.log("hej");
-   }, 10000)
    let codeVerifier = generateRandomString(128);
 
    generateCodeChallenge(codeVerifier).then((codeChallenge) => {
@@ -378,7 +375,6 @@ export async function spotifyApi(operation) {
    while (retries < maxRetries) {
      try {
        const result = await operation;
-       console.log("Nice");
        return result; // Operation succeeded, return the result
      } catch (error) {
        if (error) {

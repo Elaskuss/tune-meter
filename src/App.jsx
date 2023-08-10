@@ -74,7 +74,6 @@ function App() {
             });
 
             player.addListener('autoplay_failed', (state) => {
-               console.log(state)
                setAutoPlayFailed(true);
              });
 

@@ -24,14 +24,12 @@ const GuessPlayer = ({ song, playerInfo, ...otherProps }) => {
             let playerPoints = player.points + 100
             updatePlayer({...player, points: playerPoints, guessed: true});
          }else {
-            console.log(player.points + points + " Points");
             let playerPoints = player.points + points
             updatePlayer({...player, points: playerPoints, guessed: true});
          }
          
       }
       else{
-         console.log("No Points")
          updatePlayer({...player, guessed: true});
       }
    };

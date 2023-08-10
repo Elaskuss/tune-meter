@@ -69,7 +69,6 @@ const Index = ({ autoPlayFailed }) => {
    };
 
    useEffect(() => {
-      console.log(autoPlayFailed, autoPlayActive);
       if (autoPlayFailed && autoPlayActive && spotifyPlayer) {
          spotifyApi(spotifyPlayer.activateElement()).then(() => {
             getLobbyTrack(access_token).then((track) => {
@@ -121,7 +120,7 @@ const Index = ({ autoPlayFailed }) => {
                            OBS! If the game still doesn't work, it could be
                            because you don't have an instance of Spotify open.
                            Make sure to have Spotify open and active (the play
-                           button not grayed out) somewhere.
+                           button not grayed out) somewhere then refresh this page.
                         </p>
                      </div>
                      <AutoPlay onClick={handleAutoPlay}>

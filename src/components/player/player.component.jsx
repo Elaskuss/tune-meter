@@ -3,7 +3,7 @@ import { PlayerContext } from "../../context/player.context";
 import { DisplayName, PlayerContainer, Ready } from "./player.styles";
 
 const Player = ({displayName, id, status}) => {
-   const {updatePlayer, player, spotifyPlayer} = useContext(PlayerContext);
+   const {updatePlayer, player} = useContext(PlayerContext);
 
    const notReady = {...player, status: "Not Ready" };
    const ready = {...player, status: "Ready" };
@@ -20,10 +20,6 @@ const Player = ({displayName, id, status}) => {
             updatePlayer(notReady);
             break;
        }
-
-       spotifyPlayer.activateElement().then((promise) => {
-         console.log(promise);
-       });
    }
 
    return (

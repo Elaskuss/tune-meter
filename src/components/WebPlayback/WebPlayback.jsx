@@ -36,15 +36,13 @@ function WebPlayback(props) {
       updatePlayer({ ...player, changeSong: !player.changeSong });
    };
 
-   console.log("hej");
-
    const handleSongs = async (uris) => {
       const body = JSON.stringify({
          uris: uris,
          offset: {
             position: player.round,
          },
-         position_ms: 0,
+         position_ms: 1200,
       });
       await startPlayback(token, body);
       setTimeout(async () => {
@@ -60,7 +58,6 @@ function WebPlayback(props) {
                clearTimeout(actionTimer); // Clear the previous timer
             }
             actionTimer = setTimeout(() => {
-               console.log(state);
                songUri = "";
                setFinishedLoading(true);
                setTimeout(() => {
@@ -72,6 +69,7 @@ function WebPlayback(props) {
    };
 
    useEffect(() => {
+      console.log(songs);
       if (songs[0] && !songsInitialized) {
          const uris = songs.map((song) => {
             return song.uri;
@@ -119,7 +117,9 @@ function WebPlayback(props) {
             spotifyApi(spotifyPlayer.getVolume()).then(async (response) => {
                if (response) {
                   setToggleVolume(true);
-                  await spotifyApi(spotifyPlayer.setVolume(0));
+                  setTimeout(async () => {
+                     await spotifyApi(spotifyPlayer.setVolume(0));
+                  }, 200)
                }
             });
             await spotifyApi(spotifyPlayer.nextTrack());
@@ -219,7 +219,7 @@ function WebPlayback(props) {
                )}
 
                <div>
-                  {Math.ceil(players.length * 0.51) - changeSongVote} more votes
+                  {Math.ceil(players.length * 0.51) - changeSongVote} &nbsp; more votes
                   needed for next round
                </div>
             </NextSongContainer>
