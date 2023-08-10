@@ -15,7 +15,7 @@ import {
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
 import { PlayerContext } from "../../context/player.context";
 
-const Index = ({ autoPlay }) => {
+const Index = ({ autoPlayFailed }) => {
    const [joinGame, setJoinGame] = useState("join");
    const navigate = useNavigate();
    const { spotifyPlayer } = useContext(PlayerContext);
@@ -61,25 +61,23 @@ const Index = ({ autoPlay }) => {
    };
 
    useEffect(() => {
-      if (!autoPlay && autoPlayActive) {
+      console.log(autoPlayFailed, autoPlayActive);
+      if (autoPlayFailed && autoPlayActive && spotifyPlayer) {
          spotifyApi(spotifyPlayer.activateElement()).then(() => {
             getLobbyTrack(access_token).then((track) => {
                const body = JSON.stringify({
                   uris: [track.uri],
                   position_ms: 0,
+                  play: true,
                });
                startPlayback(access_token, body).then(() => {
-                  spotifyApi(spotifyPlayer.resume()).then(() => {
-                     setTimeout(() => {
-                        spotifyApi(spotifyPlayer.setVolume(0.5));
-                     }, 200);
-                  });
+                  spotifyApi(spotifyPlayer.setVolume(0.5));
                });
             });
          });
       }
       // eslint-disable-next-line
-   }, [autoPlay, autoPlayActive]);
+   }, [autoPlayFailed, autoPlayActive, spotifyPlayer]);
 
    const handleAutoPlay = () => {
       setAutoPlayActive(true);
@@ -120,7 +118,7 @@ const Index = ({ autoPlay }) => {
                )}
             </>
          )}
-         {autoPlay && !autoPlayActive && (
+         {autoPlayFailed && !autoPlayActive && (
             <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>
          )}
       </PageContainer>

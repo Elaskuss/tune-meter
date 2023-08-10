@@ -126,7 +126,7 @@ function App() {
             </div>
          )}
          <Routes>
-            <Route path="/" element={<Index autoPlay={autoPlayFailed}/>} />
+            <Route path="/" element={<Index autoPlayFailed={autoPlayFailed}/>} />
             <Route path="/lobby" Component={Lobby} />
             <Route path="/game" Component={Game} />
          </Routes>
