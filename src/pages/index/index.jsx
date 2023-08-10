@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import {
    requestSpotifyAccessToken,
    requestUserAuthorization,
+   spotifyApi,
 } from "../../config/spotify/spotify.config";
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
 import { PlayerContext } from "../../context/player.context";
@@ -58,11 +59,11 @@ const Index = ({ autoPlay }) => {
    };
 
    const handleAutoPlay = () => {
-      spotifyPlayer.activateElement().then(() => {
-         spotifyPlayer.resume().then(() => {
+      spotifyApi(spotifyPlayer.activateElement()).then(() => {
+         spotifyApi(spotifyPlayer.resume()).then(() => {
             setAutoPlayActive(true);
-         })
-      }, 200)
+         });
+      }, 200);
    };
 
    return (
@@ -100,7 +101,7 @@ const Index = ({ autoPlay }) => {
                )}
             </>
          )}
-         {(autoPlay && !autoPlayActive) && (
+         {autoPlay && !autoPlayActive && (
             <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>
          )}
       </PageContainer>
