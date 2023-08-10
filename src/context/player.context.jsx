@@ -9,7 +9,7 @@ const INITIAL_STATE = {
       displayName: "",
       gameKey: "",
       id: "",
-      status: "NOT READY",
+      status: "Not Ready",
       points: 0,
       disconnected: false,
       songsLoaded: false,

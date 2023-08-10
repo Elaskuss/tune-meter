@@ -16,6 +16,7 @@ import {
    SongInfoContainer,
    SongName,
    StyledPlayerContainer,
+   Wrapper,
 } from "./WebPlayback.styles";
 import NextTrack from "../../svg/NextTrack";
 import Heart from "../../svg/Heart";
@@ -131,7 +132,7 @@ function WebPlayback(props) {
    useEffect(() => {
       const fastForward = async () => {
          spotifyApi(spotifyPlayer.seek(12 * 1000)).then(() => {
-            if(toggleVolume){
+            if (toggleVolume) {
                spotifyApi(spotifyPlayer.setVolume(0.5));
             }
          });
@@ -176,31 +177,38 @@ function WebPlayback(props) {
    } else {
       return (
          <StyledPlayerContainer>
-            <SongInfoContainer>
-               <img
-                  src={songs[player.round].album.images[1].url}
-                  alt="Album Cover"
-               />
-               <NameContainer>
-                  <SongInfo>
-                     <SongName>{songs[player.round].name}</SongName>
-                     <ArtistName>
-                        {songs[player.round].artists.reduce((acc, artist) => {
-                           if (
-                              artist.uri !== songs[player.round].artists[0].uri
-                           ) {
-                              return acc + ` ${artist.name}`;
-                           } else {
-                              return acc;
-                           }
-                        }, `${songs[player.round].artists[0].name}`)}
-                     </ArtistName>
-                  </SongInfo>
-                  <Heart color={favorite} onClick={favoriteSong}>
-                     Favorite
-                  </Heart>
-               </NameContainer>
-            </SongInfoContainer>
+            <Wrapper>
+               <SongInfoContainer>
+                  <img
+                     src={songs[player.round].album.images[1].url}
+                     alt="Album Cover"
+                  />
+                  <NameContainer>
+                     <SongInfo>
+                        <SongName>{songs[player.round].name}</SongName>
+                        <ArtistName>
+                           {songs[player.round].artists.reduce(
+                              (acc, artist) => {
+                                 if (
+                                    artist.uri !==
+                                    songs[player.round].artists[0].uri
+                                 ) {
+                                    return acc + ` ${artist.name}`;
+                                 } else {
+                                    return acc;
+                                 }
+                              },
+                              `${songs[player.round].artists[0].name}`
+                           )}
+                        </ArtistName>
+                     </SongInfo>
+                     <Heart color={favorite} onClick={favoriteSong}>
+                        Favorite
+                     </Heart>
+                  </NameContainer>
+               </SongInfoContainer>
+            
+
             <NextSongContainer>
                {showSongSkip ? (
                   <NextTrackContainer>
@@ -215,6 +223,7 @@ function WebPlayback(props) {
                   needed for next round
                </div>
             </NextSongContainer>
+            </Wrapper>
          </StyledPlayerContainer>
       );
    }

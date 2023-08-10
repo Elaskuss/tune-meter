@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useState } from "react";
-import { FormStyle } from "./game-form.styles";
+import { FormStyle, InputStyle, LobbyButton } from "./game-form.styles";
 import {
    createGame,
    joinGame,
@@ -92,7 +92,7 @@ const GameForm = ({ promt, type }) => {
          {throwError.gameKeyError && (
             <ErrorMessage error={"The game can not be found"} />
          )}
-         <input
+         <InputStyle
             type={type}
             placeholder="Game Key"
             value={formFields.gameKey}
@@ -102,7 +102,7 @@ const GameForm = ({ promt, type }) => {
          {throwError.usernameError && (
             <ErrorMessage error={"Username is already in use"} />
          )}
-         <input
+         <InputStyle
             type="text"
             placeholder="Username"
             value={formFields.username}
@@ -110,11 +110,11 @@ const GameForm = ({ promt, type }) => {
             name="username"
             required
          />
-         <button>{promt}</button>
+         <LobbyButton>{promt}</LobbyButton>
          {reconnectPlayer.gameActive && (
-            <button type="button" onClick={handleReconnect}>
+            <LobbyButton type="button" onClick={handleReconnect}>
                Reconnect
-            </button>
+            </LobbyButton>
          )}
       </FormStyle>
    );

@@ -2,20 +2,24 @@ import styled from "styled-components";
 
 export const NavOptionStyle = styled.button`
    width: 100%;
-   height: 50px;
+   height: 100px;
    color: inherit;
    background: none;
    border:none;
+   font-weight: 1000;
+   font-size: 30px;
 
-   font-size: 20px;
-
-   &.selected{
-      border-bottom: 2px solid black;
+   @media (max-width: 680px) {
+      font-size: 18px;
    }
 
    &:hover{
-      background-color:rgba(230, 230, 230, 1);
+      cursor: pointer;
+      font-size: 32px;
+
+      @media (max-width: 680px) {
+      font-size: 20px;
+   }
    }
 `;
-
 

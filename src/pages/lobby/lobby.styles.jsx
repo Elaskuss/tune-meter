@@ -1,10 +1,8 @@
 import styled from "styled-components";
 
 export const LobbyContainer = styled.div`
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
    height: 100vh;
+   width: 100vw;
    align-items: center;
 
    h2 {
@@ -16,14 +14,37 @@ export const LobbyContainer = styled.div`
 export const PlayersContainer = styled.div`
    display: flex;
    flex-direction: column;
-   height: 60vh;
-   width: 80vw;
+   
+   height: 80vh;
+   width: 100vw;
+   align-items:center;
+
+   @media (max-width: 900px) {
+      margin-top: 50px;
+   }
 `;
 export const GameKey = styled.h1`
    position: relative;
-   width: 100vw;
-   align-self: flex-start;
+   align-self: center;
    text-align: center;
-   margin-bottom: 50px;
-   font-size: 10vw;
+   margin: 0px;
+   font-size: 70px;
+
+      
+   @media (max-width: 900px) {
+      top: 20px;
+      font-size: 50px;
+   }
 `;
+
+export const PlayerCounter = styled.div`
+   width: 80%;
+   box-sizing: border-box;
+   position: absolute;
+   left: 50%;
+   bottom: 10px;
+   transform: translate(-50%, 0%);
+`
+export const Info = styled.h2`
+
+`

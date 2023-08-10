@@ -6,6 +6,7 @@ import GuessPlayer from "../../components/guess-player/guess-player.component";
 import { useState } from "react";
 import ShowPoints from "../../components/show-points/show-point";
 import WebPlayback from "../../components/WebPlayback/WebPlayback";
+import { GameContainer, GuessPlayerContainer, Title } from "./game.styled";
 
 const Game = () => {
    const { player, updateSongs, players, songs, updatePlayer } =
@@ -108,27 +109,28 @@ const Game = () => {
    }, [players]);
 
    return (
-      <div>
-         <h1>Whos that Spotify?</h1>
+      <GameContainer>
+         <Title>Whos that Spotify?</Title>
          {showPoints ? (
             <ShowPoints />
          ) : (
-            <div hidden={songs[player.round] ? false : true}>
-               <div>
-                  {players.map((player) => (
-                     <GuessPlayer
-                        song={songs[player.round]}
-                        key={player.id}
-                        playerInfo={player}
-                     />
-                  ))}
-               </div>
-               <div hidden={!player.guessed && !showPoints}>
+            <>
+               {!player.guessed ? (
+                  <GuessPlayerContainer>
+                     {players.map((player) => (
+                        <GuessPlayer
+                           song={songs[player.round]}
+                           key={player.id}
+                           playerInfo={player}
+                        />
+                     ))}
+                  </GuessPlayerContainer>
+               ) : (
                   <WebPlayback token={token} />
-               </div>
-            </div>
+               )}
+            </>
          )}
-      </div>
+      </GameContainer>
    );
 };
 export default Game;

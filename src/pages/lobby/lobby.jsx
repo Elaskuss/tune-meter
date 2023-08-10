@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 import Player from "../../components/player/player.component";
-import { GameKey, LobbyContainer, PlayersContainer } from "./lobby.styles";
+import { GameKey, Info, LobbyContainer, PlayerCounter, PlayersContainer } from "./lobby.styles";
 
 const Lobby = () => {
    const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Lobby = () => {
 
    useEffect(() => {
       const readyPlayersCount = players.reduce((count, player) => {
-         if (player.status === "READY") {
+         if (player.status === "Ready") {
             return count + 1;
          }
          return count;
@@ -72,22 +72,22 @@ const Lobby = () => {
                   />
                ))}
          </PlayersContainer>
-         <>
+         <PlayerCounter>
          {readyPlayerCount === players.length ? (
             // {readyPlayerCount === players.length && players.length > 1 ? (
-               <h2>Game starts in... {countdown}</h2>
+               <Info>Game starts in... {countdown}</Info>
             ) : (
-               <h2>
+               <Info>
                   {players.length > 1 ? (
                      <span>
-                        PLAYERS READY ({readyPlayerCount}/{players.length})
+                        Players ready ({readyPlayerCount}/{players.length})
                      </span>
                   ) : (
-                     <span>YOU NEED MORE PLAYERS TO START</span>
+                     <span>You need more players to start</span>
                   )}
-               </h2>
+               </Info>
             )}
-         </>
+         </PlayerCounter>
       </LobbyContainer>
    );
 };

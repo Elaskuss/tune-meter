@@ -112,7 +112,7 @@ export const createPlayer = async (displayName, gameKey) => {
    const player = {
       id: id,
       displayName: displayName.toUpperCase(),
-      status: "NOT READY",
+      status: "Not Ready",
       gameKey: gameKey,
       gameActive: false,
       points: 0,

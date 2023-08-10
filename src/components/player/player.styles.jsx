@@ -1,30 +1,55 @@
 import styled from "styled-components";
 
 export const PlayerContainer = styled.div`
+   margin-top: 0px;
    display: flex;
-   width: 100%;
+   width: 80%;
    justify-content: space-between;
 
-   button {
-      width: 100px;
-      height: 50px;
-      font-size: 12px;
-      align-self: flex-end;
-      margin: 2vw;
-   }
    p {
-      width: 100px;
-      height: auto;
-      align-self: center;
-      margin: 2vw;
-      font-size: 12px;
-      align-items: center;
-      justify-content: center;
+      width: 150px;
       text-align: center;
+      font-size: 16px;
+      margin: 0px;
+      align-self: center;
+      @media (max-width: 900px) {
+         padding: 3px 5px;
+         font-size: 12px;
+         width: 100px;
+      }
    }
-   h2 {
-      font-size: 6vw;
-      margin: 2vw;
-      align-self: flex-start;
+
+   @media (min-width: 900px) {
+      width: 40%;
+   }
+`;
+
+export const DisplayName = styled.h2`
+   justify-self: center;
+   font-size: 40px;
+   @media (max-width: 900px) {
+      font-size: 20px;
+   }
+   align-self: flex-start;
+`;
+
+export const Ready = styled.button`
+   display: inline-block;
+   padding: 10px 20px;
+   width: 150px;
+   height: 50px;
+   align-self: center;
+   background-color: #1db954; /* Spotify green color */
+   color: #ffffff;
+   font-weight: 700;
+   border: none;
+   border-radius: 50px;
+   font-size: 16px;
+   cursor: pointer;
+
+   @media (max-width: 900px) {
+      padding: 3px 5px;
+      font-size: 12px;
+      width: 100px;
    }
 `;

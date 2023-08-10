@@ -1,5 +1,12 @@
 import { useContext, useState } from "react";
-import { NavOptionContainer, PageContainer } from "./index.styles";
+import {
+   AutoPlay,
+   AutoPlayContainer,
+   Border,
+   NavOptionContainer,
+   PageContainer,
+   SpotifyAccess,
+} from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import { useEffect } from "react";
 import GameForm from "../../components/game-form/game-form.component";
@@ -47,12 +54,13 @@ const Index = ({ autoPlayFailed }) => {
 
    const handleClick = (event) => {
       setJoinGame(event.target.value);
+      const border = document.querySelector(".border");
       if (event.target.value === "join") {
-         document.querySelector(".join").classList.add("selected");
-         document.querySelector(".host").classList.remove("selected");
+         border.classList.add("join");
+         border.classList.remove("host");
       } else {
-         document.querySelector(".host").classList.add("selected");
-         document.querySelector(".join").classList.remove("selected");
+         border.classList.add("host");
+         border.classList.remove("join");
       }
    };
 
@@ -86,40 +94,66 @@ const Index = ({ autoPlayFailed }) => {
    return (
       <PageContainer>
          {!access_token ? (
-            <>
-               <h1>This games requires access to your Spotify</h1>
-               <h2>YOU NEED PREMIUM</h2>
+            <SpotifyAccess>
+               <h1>Log in to spotify</h1>
+               <p>
+                  This game uses your favorite songs to create a music quiz.{" "}
+                  <br />
+                  <br />
+                  Please Note: <br />
+                  It is only playable if you have Spotify premium
+               </p>
                <SpotifyLogInButton
                   handleEvent={handleSpotifyLogin}
                   promt={"Log In With Spotify"}
                />
-            </>
+            </SpotifyAccess>
          ) : (
             <>
-               <NavOptionContainer>
-                  <NavOption
-                     value={"join"}
-                     promt={"Join Game"}
-                     className="join"
-                     onClick={handleClick}
-                  />
-                  <NavOption
-                     value={"host"}
-                     promt={"Host Game"}
-                     className="host"
-                     onClick={handleClick}
-                  />
-               </NavOptionContainer>
-
-               {joinGame === "join" ? (
-                  <GameForm type={"text"} promt={"Join"} />
+               {autoPlayFailed && !autoPlayActive ? (
+                  <AutoPlayContainer>
+                     <div>
+                        <h2>Enable Autoplay</h2>
+                        <p>
+                           This game requires autoplay to function. To ensure it
+                           works properly, please enable autoplay by clicking
+                           the button below. <br /> <br />
+                           OBS! If the game still doesn't work, it could be
+                           because you don't have an instance of Spotify open.
+                           Make sure to have Spotify open and active (the play
+                           button not grayed out) somewhere.
+                        </p>
+                     </div>
+                     <AutoPlay onClick={handleAutoPlay}>
+                        Activate Autoplay
+                     </AutoPlay>
+                  </AutoPlayContainer>
                ) : (
-                  <GameForm type={"hidden"} promt={"Create Game"} />
+                  <>
+                     <NavOptionContainer>
+                        <NavOption
+                           value={"join"}
+                           promt={"Join Game"}
+                           className="join"
+                           onClick={handleClick}
+                        />
+                        <NavOption
+                           value={"host"}
+                           promt={"Host Game"}
+                           className="host"
+                           onClick={handleClick}
+                        />
+                        <Border className="border"></Border>
+                     </NavOptionContainer>
+
+                     {joinGame === "join" ? (
+                        <GameForm type={"text"} promt={"Join"} />
+                     ) : (
+                        <GameForm type={"hidden"} promt={"Create Game"} />
+                     )}
+                  </>
                )}
             </>
-         )}
-         {autoPlayFailed && !autoPlayActive && (
-            <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>
          )}
       </PageContainer>
    );

@@ -1,17 +1,18 @@
 import styled from "styled-components";
 
 export const LogInButton = styled.button`
-   position: relative;
-   background-color: var(--background-base, #1ed760);
-   color: var(--text-base, #000000);
-   border-radius: 500px;
-   font-size: inherit;
-   padding: 14px 32px;
-   display: flex;
-   -moz-box-align: center;
-   align-items: center;
-   -moz-box-pack: center;
-   justify-content: center;
+   margin-top: 30px;
+   display: inline-block;
+   padding: 10px 20px;
+   width: 230px;
+   height: 50px;
+   background-color: #1db954; /* Spotify green color */
+   color: #ffffff;
+   font-weight: 700;
+   border: none;
+   border-radius: 50px;
+   font-size: 16px;
+   cursor: pointer;
 
    font-family: spotify-circular, Helvetica, Arial, sans-serif;
    font-size: 14px;
