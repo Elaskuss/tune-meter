@@ -63,7 +63,7 @@ const Index = ({ autoPlay }) => {
          spotifyApi(spotifyPlayer.resume()).then(() => {
             setAutoPlayActive(true);
          });
-      }, 200);
+      }, 2000);
    };
 
    return (
