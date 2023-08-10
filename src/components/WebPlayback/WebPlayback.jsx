@@ -29,6 +29,7 @@ function WebPlayback(props) {
    const [changeSongVote, setChangeSongVote] = useState(0);
    const [favorite, setFavorite] = useState("none");
    const [finishedLoading, setFinishedLoading] = useState(false);
+   const [toggleVolume, setToggleVolume] = useState(false);
 
    const handleNextSong = () => {
       updatePlayer({ ...player, changeSong: !player.changeSong });
@@ -63,7 +64,7 @@ function WebPlayback(props) {
                setFinishedLoading(true);
                setTimeout(() => {
                   spotifyPlayer.resume();
-               }, 500)
+               }, 500);
             }, 500);
          }
       });
@@ -114,6 +115,12 @@ function WebPlayback(props) {
    useEffect(() => {
       const nextSongHandler = async () => {
          if (!player.guessed && player.round) {
+            spotifyApi(spotifyPlayer.getVolume()).then(async (response) => {
+               if (response) {
+                  setToggleVolume(true);
+                  await spotifyApi(spotifyPlayer.setVolume(0));
+               }
+            });
             await spotifyApi(spotifyPlayer.nextTrack());
          }
       };
@@ -122,11 +129,18 @@ function WebPlayback(props) {
    }, [player]);
 
    useEffect(() => {
-      if (finishedLoading) {
-         spotifyApi(spotifyPlayer.seek(12 * 1000));
+      const fastForward = async () => {
+         spotifyApi(spotifyPlayer.seek(12 * 1000)).then(() => {
+            spotifyApi(spotifyPlayer.setVolume(0.5));
+         });
+         setToggleVolume(false);
          setFinishedLoading(false);
+      };
+
+      if (finishedLoading) {
+         fastForward();
       }
-      // eslint-disable-next-line 
+      // eslint-disable-next-line
    }, [finishedLoading]);
 
    useEffect(() => {

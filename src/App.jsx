@@ -60,7 +60,7 @@ function App() {
                         });
                         startPlayback(token, body).then(() => {
                            setTimeout(() => {
-                              player.setVolume(0.1);
+                              player.setVolume(0.5);
                            }, 500)
                         });
                      });
@@ -73,12 +73,8 @@ function App() {
                console.log("Device ID has gone offline", device_id);
             });
 
-            player.addListener("player_state_changed", (state) => {
-               console.log(state);
-            });
-
-
-            player.addListener('autoplay_failed', () => {
+            player.addListener('autoplay_failed', (state) => {
+               console.log(state)
                setAutoPlayFailed(true);
              });
 

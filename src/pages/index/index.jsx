@@ -22,8 +22,6 @@ const Index = ({ autoPlay }) => {
    const [autoPlayActive, setAutoPlayActive] = useState(false);
    const access_token = sessionStorage.getItem("access_token");
 
-
-
    useEffect(() => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
@@ -62,9 +60,9 @@ const Index = ({ autoPlay }) => {
       requestUserAuthorization();
    };
 
-   const handleAutoPlay = () => {
-      spotifyApi(spotifyPlayer.activateElement()).then(() => {
-         setTimeout(() => {
+   useEffect(() => {
+      if(!autoPlay && autoPlayActive){
+         spotifyApi(spotifyPlayer.activateElement()).then(() => {
             getLobbyTrack(access_token).then((track) => {
                const body = JSON.stringify({
                   uris: [track.uri],
@@ -72,15 +70,19 @@ const Index = ({ autoPlay }) => {
                });
                startPlayback(access_token, body).then(() => {
                   spotifyApi(spotifyPlayer.resume()).then(() => {
-                     setAutoPlayActive(true);
+                     
                      setTimeout(() => {
-                        spotifyPlayer.setVolume(0.1);
-                     }, 500);
+                        spotifyPlayer.setVolume(0.5);
+                     }, 200);
                   });
                });
             });
-         }, 200);
-      }, 2000);
+         });
+      }
+   }, [autoPlay, autoPlayActive]);
+
+   const handleAutoPlay = () => {
+      setAutoPlayActive(true);
    };
 
    return (
