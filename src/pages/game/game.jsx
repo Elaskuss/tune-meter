@@ -101,7 +101,7 @@ const Game = () => {
                updatePlayer({ ...player, guessed: false });
             }, 300);
             setTimeout(() => {
-               setShowPoints(false);
+               setShowPoints(true);
             }, 400);
          }, 5000);
       }

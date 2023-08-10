@@ -1,22 +1,25 @@
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
+import { PointsContainer, PointsInfo, Span } from "./show-points.styles";
 
 const ShowPoints = () => {
    const {players} = useContext(PlayerContext);
    
    players.sort((a, b) => b.points - a.points);
-
+   let count = 0;
    return (
-      <div>
+      <PointsContainer>
+         
          {players.map((player) => {
+            count += 1
             return(
-               <div key={player.id}>
-                  <p >{player.displayName}</p>
-                  <p>{player.points}</p>
-               </div>
+               <PointsInfo key={player.id}>
+                  <Span>{count + ". " + '\u00A0\u00A0' + player.displayName}</Span>
+                  <Span>{player.points}</Span>
+               </PointsInfo>
             )
          })}
-      </div>
+      </PointsContainer>
    )
 }
 

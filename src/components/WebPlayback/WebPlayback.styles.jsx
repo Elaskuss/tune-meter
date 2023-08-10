@@ -17,6 +17,7 @@ export const ArtistName = styled.p`
 `;
 
 export const FastForward = styled.div`
+   z-index: 100;
    width: 30px;
    color: #828282;
    &:hover {
@@ -31,6 +32,7 @@ export const FastForward = styled.div`
 export const SongInfo = styled.div``;
 
 export const StyledHeart = styled.svg`
+   z-index: 100;
    align-self: center;
    width: 30px;
    height: 30px;
@@ -94,7 +96,7 @@ export const NextSongContainer = styled.div`
    flex-direction: column;
    width: 50%;
 
-      @media (max-width: 900px) {
+   @media (max-width: 900px) {
       width: 100%;
    }
 `;

@@ -7,7 +7,7 @@ import { GameKey, Info, LobbyContainer, PlayerCounter, PlayersContainer } from "
 const Lobby = () => {
    const navigate = useNavigate();
    const { players, player, updatePlayer } = useContext(PlayerContext);
-   const [countdown, setCountdown] = useState(1);
+   const [countdown, setCountdown] = useState(3);
    const [isCountdownActive, setIsCountdownActive] = useState(false);
    const [readyPlayerCount, setRadyPlayerCount] = useState(0);
 
@@ -50,7 +50,7 @@ const Lobby = () => {
          countDownHandler(true);
 
          if(!isCountdownActive){
-            setCountdown(1);
+            setCountdown(3);
          }
       } else {
          countDownHandler(false);

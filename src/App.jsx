@@ -57,6 +57,7 @@ function App() {
                         const body = JSON.stringify({
                            uris: [track.uri],
                            position_ms: 0,
+                           play: true,
                         });
                         startPlayback(token, body).then(() => {
                            setTimeout(() => {
