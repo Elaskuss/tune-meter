@@ -10,10 +10,9 @@ import {
    requestUserAuthorization,
 } from "../../config/spotify/spotify.config";
 import SpotifyLogInButton from "../../components/spotify-log-in-button/spotify-log-in-button.component";
-import { AdBox } from "../../components/ad/ad.styles";
 import { PlayerContext } from "../../context/player.context";
 
-const Index = ( {autoPlay}) => {
+const Index = ({autoPlay}) => {
    const [joinGame, setJoinGame] = useState("join");
    const navigate = useNavigate();
    const {spotifyPlayer} = useContext(PlayerContext);
@@ -53,7 +52,7 @@ const Index = ( {autoPlay}) => {
       }
    };
 
-   const handleSpotifyLogin = (event) => {
+   const handleSpotifyLogin = () => {
       requestUserAuthorization();
    };
 
@@ -97,7 +96,6 @@ const Index = ( {autoPlay}) => {
             </>
          )}
          {autoPlay && <button onClick={handleAutoPlay}>ACTIVATE AUTOPLAY</button>}
-         <AdBox></AdBox>
       </PageContainer>
    );
 };

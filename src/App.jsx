@@ -56,6 +56,11 @@ function App() {
                console.log("Device ID has gone offline", device_id);
             });
 
+            player.addListener("player_state_changed", (state) => {
+               console.log(state);
+            });
+
+
             player.addListener('autoplay_failed', () => {
                setAutoPlayFailed(true);
              });
@@ -108,7 +113,7 @@ function App() {
             </div>
          )}
          <Routes>
-            <Route path="/" autPlay={autoPlayFailed} Component={Index} />
+            <Route path="/" element={<Index autoPlay={autoPlayFailed}/>} />
             <Route path="/lobby" Component={Lobby} />
             <Route path="/game" Component={Game} />
          </Routes>
