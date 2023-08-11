@@ -96,7 +96,7 @@ const Index = ({ autoPlayFailed }) => {
             <SpotifyAccess>
                <h1>Log in to spotify</h1>
                <p>
-                  This game uses your favorite songs to create a music quiz.{" "}
+                  This epxerince uses your favorite songs to create a music playlist together with your friends.{" "}
                   <br />
                   <br />
                   Please Note: <br />
@@ -114,10 +114,10 @@ const Index = ({ autoPlayFailed }) => {
                      <div>
                         <h2>Enable Autoplay</h2>
                         <p>
-                           This game requires autoplay to function. To ensure it
+                           This epxerince requires autoplay to function. To ensure it
                            works properly, please enable autoplay by clicking
                            the button below. <br /> <br />
-                           OBS! If the game still doesn't work, it could be
+                           OBS! If the epxerince still doesn't work, it could be
                            because you don't have an instance of Spotify open.
                            Make sure to have Spotify open and active (the play
                            button not grayed out) somewhere then refresh this page.
@@ -132,13 +132,13 @@ const Index = ({ autoPlayFailed }) => {
                      <NavOptionContainer>
                         <NavOption
                            value={"join"}
-                           promt={"Join Game"}
+                           promt={"Join Group"}
                            className="join"
                            onClick={handleClick}
                         />
                         <NavOption
                            value={"host"}
-                           promt={"Host Game"}
+                           promt={"Join Group"}
                            className="host"
                            onClick={handleClick}
                         />
@@ -148,7 +148,7 @@ const Index = ({ autoPlayFailed }) => {
                      {joinGame === "join" ? (
                         <GameForm type={"text"} promt={"Join"} />
                      ) : (
-                        <GameForm type={"hidden"} promt={"Create Game"} />
+                        <GameForm type={"hidden"} promt={"Create Room"} />
                      )}
                   </>
                )}

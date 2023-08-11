@@ -75,15 +75,15 @@ const Lobby = () => {
          <PlayerCounter>
          {readyPlayerCount === players.length ? (
             // {readyPlayerCount === players.length && players.length > 1 ? (
-               <Info>Game starts in... {countdown}</Info>
+               <Info>Music starts in... {countdown}</Info>
             ) : (
                <Info>
                   {players.length > 1 ? (
                      <span>
-                        Players ready ({readyPlayerCount}/{players.length})
+                        People in lobby ({readyPlayerCount}/{players.length})
                      </span>
                   ) : (
-                     <span>You need more players to start</span>
+                     <span>You need more people to create a playlist</span>
                   )}
                </Info>
             )}
