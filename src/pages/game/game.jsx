@@ -101,9 +101,9 @@ const Game = () => {
                updatePlayer({ ...player, guessed: false });
             }, 300);
             setTimeout(() => {
-               setShowPoints(true);
+               setShowPoints(false);
             }, 400);
-         }, 5000);
+         }, 3000);
       }
       // eslint-disable-next-line
    }, [players]);
