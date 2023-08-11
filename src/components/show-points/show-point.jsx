@@ -14,7 +14,7 @@ const ShowPoints = () => {
             count += 1
             return(
                <PointsInfo key={player.id}>
-                  <Span>{count + ". " + '\u00A0\u00A0' + player.displayName}</Span>
+                  <Span>{count + '. \u00A0\u00A0' + player.displayName}</Span>
                   <Span>{player.points}</Span>
                </PointsInfo>
             )
