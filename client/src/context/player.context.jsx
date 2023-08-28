@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { setDoc } from "../config/firebase/firebase.config";
+import { setDoc } from "../config/firebase/realtime_database.js";
 
 export const PlayerContext = createContext();
 
@@ -12,7 +12,6 @@ const INITIAL_STATE = {
       status: "Not Ready",
       points: 0,
       disconnected: false,
-      songsLoaded: false,
       guessed: false,
       round: 0,
    },

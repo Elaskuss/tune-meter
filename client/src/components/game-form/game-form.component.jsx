@@ -5,12 +5,13 @@ import {
    createGame,
    joinGame,
    reconnectGame,
-} from "../../config/firebase/firebase.config";
+} from "../../config/firebase/realtime_database.js";
 import ErrorMessage from "../error-message/error-message.component";
 import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 
 const GameForm = ({ promt, type }) => {
+   const [isLoading, setIsLoading] = useState(false);
    const navigate = useNavigate();
    const { updatePlayer, updatePlayers } = useContext(PlayerContext);
    let reconnectPlayer = {};
@@ -46,7 +47,7 @@ const GameForm = ({ promt, type }) => {
 
    const handleSubmit = async (event) => {
       event.preventDefault();
-
+      setIsLoading(true);
       if (type === "hidden") {
          await createGame(formFields.username, updatePlayer, updatePlayers);
          navigate("/lobby");
@@ -68,6 +69,7 @@ const GameForm = ({ promt, type }) => {
             }
          }
       }
+      setIsLoading(false);
    };
 
    const handleReconnect = async () => {
@@ -110,7 +112,7 @@ const GameForm = ({ promt, type }) => {
             name="username"
             required
          />
-         <LobbyButton>{promt}</LobbyButton>
+         <LobbyButton disabled={isLoading}>{promt}</LobbyButton>
          {reconnectPlayer.gameActive && (
             <LobbyButton type="button" onClick={handleReconnect}>
                Reconnect
