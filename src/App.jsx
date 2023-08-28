@@ -1,10 +1,7 @@
 import Index from "./pages/index/index";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import Lobby from "./pages/lobby/lobby";
 import Game from "./pages/game/game";
-import { getSongs } from "./config/firebase/firestore";
-import { useEffect } from "react";
-import { fetchSong } from "./config/api/api";
 
 function App() {
     return (
