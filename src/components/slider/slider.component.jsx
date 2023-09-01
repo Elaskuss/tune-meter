@@ -57,7 +57,7 @@ const Slider = ({ whosTurn, showVotes }) => {
                         disabled={player.guessed}
                         onChange={handleSliderChange}
                     ></StyledSlider>
-                    {showVotes && player.id !== players[whosTurn].id(
+                    {showVotes && (player.id !== players[whosTurn].id) && (
                         <TheAnswer
                             style={{
                                 backgroundColor: "green",
