@@ -83,6 +83,11 @@ export const Confirm = styled.button`
    font-size: 16px;
    cursor: pointer;
 
+   &:disabled {
+      background-color: #cccccc; /* Change the color for disabled state */
+      cursor: not-allowed;
+   }
+
    @media (max-width: 900px) {
       padding: 3px 5px;
       font-size: 12px;
