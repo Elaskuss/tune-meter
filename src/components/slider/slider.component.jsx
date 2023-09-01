@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { PlayerContext } from "../../context/player.context";
 import {
+   Confirm,
     Emoji,
     PointsContainer,
     SliderContainer,
@@ -80,9 +81,9 @@ const Slider = ({ whosTurn, showVotes }) => {
                 </PointsContainer>
                 <Emoji>🔥</Emoji>
             </SliderInfo>
-            <button onClick={handleClick} disabled={player.guessed}>
+            <Confirm onClick={handleClick} disabled={player.guessed}>
                 Confirm
-            </button>
+            </Confirm>
         </SliderContainer>
     );
 };
