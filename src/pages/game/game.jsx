@@ -45,7 +45,7 @@ const Game = () => {
          const shuffledSongs = customShuffle(songs, player.gameKey);
          setSongs(shuffledSongs);
       }
-      if(songs.length){
+      if (songs.length) {
          const song = await fetchSong(
             songs[round].title,
             songs[round].artist.split(" ")[0]
@@ -53,13 +53,13 @@ const Game = () => {
          setSong(song.data[0].preview);
       }
    };
-
+   
    useEffect(() => {
       loadSong();
       calculateWhosTurn();
       // eslint-disable-next-line
    }, [songs, round]);
-
+   
    useEffect(() => {
       const totalGussed = players.reduce((accumulator, player) => {
          if (player.guessed) {
@@ -78,13 +78,12 @@ const Game = () => {
          setShowVotes(true);
          setTimeout(() => {
             setShowPoints(true);
-            setRound(player.round); 
+            setRound(player.round);
          }, 1500);
          setTimeout(() => {
             setShowPoints(false);
             setShowVotes(false);
             updatePlayer({ ...player, guessed: false });
-
          }, 5000);
       }
 
@@ -126,7 +125,11 @@ const Game = () => {
                         />
                      ))}
                   </GuessPlayerContainer> */}
-               {song && <AudioPlayer audioUrl={song}></AudioPlayer>}
+               {song && (
+                  <AudioPlayer
+                     audioUrl={song}
+                  ></AudioPlayer>
+               )}
             </>
          )}
       </GameContainer>
