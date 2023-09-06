@@ -28,9 +28,32 @@ const Slider = ({ whosTurn, showVotes }) => {
       updatePlayer({ ...player, guessed: value });
    };
 
+   const calcPoint = () => {
+      let adjustedRange;
+      if (player.guessed <= 10) {
+          adjustedRange = 20 - player.guessed;
+      } else if (player.guessed >= 90) {
+          adjustedRange = 20 - (100 - player.guessed);
+      } else {
+          adjustedRange = 10;
+      }
+   
+      let difference = Math.abs(players[whosTurn].guessed - player.guessed);
+      let rawPoints = 0;
+      
+      if (difference <= adjustedRange) {
+         console.log(adjustedRange);
+          rawPoints = Math.abs(10 - difference);
+      }
+   
+      const points = (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
+      return points;
+   }
+
+
    return (
       <SliderContainer>
-         <h1>{showVotes && player.id !== players[whosTurn].id ? `You got ${100 - Math.abs(players[whosTurn].guessed - player.guessed)} points` : value}</h1>
+         <h1>{showVotes && player.id !== players[whosTurn].id ? `You got ${calcPoint()} points` : value}</h1>
          <SliderInfo>
             <Emoji>🗑️</Emoji>
             <PointsContainer>

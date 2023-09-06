@@ -50,16 +50,12 @@ const Game = () => {
             const songs = await getSongs();
             const shuffledSongs = customShuffle(songs, player.gameKey);
             setSongs(shuffledSongs);
-
-            console.log(shuffledSongs);
         }
         if (songs.length) {
-            console.log(songs[round], round);
             const song = await fetchSong(
                 songs[round].title,
                 songs[round].artist.split(" ")[0]
             );
-            console.log(song);
             setSong(song.data[0].preview);
         }
     };
@@ -101,8 +97,25 @@ const Game = () => {
         if (totalGuessed === players.length && !pointsAdded) {
             setPointsAdded(true);
             if (players[whosTurn].id !== player.id) {
-                const points =
-                    100 - Math.abs(players[whosTurn].guessed - player.guessed);
+
+                let adjustedRange;
+                if (player.guessed <= 10) {
+                    adjustedRange = 20 - player.guessed;
+                } else if (player.guessed >= 90) {
+                    adjustedRange = 20 - (100 - player.guessed);
+                } else {
+                    adjustedRange = 10;
+                }
+
+                let difference = Math.abs(players[whosTurn].guessed - player.guessed);
+                let rawPoints = 0;
+                
+                if (difference <= adjustedRange) {
+                    rawPoints = Math.abs(10 - difference);
+                }
+    
+                const points = (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
+
                 updatePlayer({
                     ...player,
                     points: player.points + points,
@@ -117,7 +130,7 @@ const Game = () => {
 
     return (
         <GameContainer>
-            {true ? (
+            {showPoints ? (
                 <ShowPoints></ShowPoints>
             ) : (
                 <>
