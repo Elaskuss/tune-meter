@@ -9,17 +9,39 @@ export const PointsContainer = styled.div`
    align-items: center;
 `;
 
-export const Span = styled.p`
+export const Name = styled.p`
    display: inline-block;
-   width: 50%;
    text-align: center;
    font-size: 20px;
    font-weight: 900;
+
+   @media (max-width: 900px) {
+         font-size: 16px;
+      text-align: left;
+   }
+
 `;
+
+
+export const Point = styled.p`
+   display: inline-block;
+   text-align: center;
+   font-size: 20px;
+   font-weight: 900;
+
+   @media (max-width: 900px) {
+         font-size: 16px;
+      text-align: left;
+   }
+
+`;
+
 
 export const PointsInfo = styled.div`
    position: relative;
-   width: 100%;
+   width: 70%;
+   display: flex;
+   justify-content: space-between;
    @media (min-width: 900px) {
       width: 50%;
    }

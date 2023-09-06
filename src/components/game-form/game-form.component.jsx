@@ -110,6 +110,7 @@ const GameForm = ({ promt, type }) => {
             value={formFields.username}
             onChange={handleChange}
             name="username"
+            maxlength="12"
             required
          />
          <LobbyButton disabled={isLoading}>{promt}</LobbyButton>

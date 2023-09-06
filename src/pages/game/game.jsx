@@ -117,7 +117,7 @@ const Game = () => {
 
     return (
         <GameContainer>
-            {showPoints ? (
+            {true ? (
                 <ShowPoints></ShowPoints>
             ) : (
                 <>

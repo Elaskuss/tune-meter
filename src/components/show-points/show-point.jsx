@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
-import { PointsContainer, PointsInfo, Span } from "./show-points.styles";
+import { PointsContainer, PointsInfo, Name, Point } from "./show-points.styles";
 
 const ShowPoints = () => {
    const {players} = useContext(PlayerContext);
@@ -14,8 +14,8 @@ const ShowPoints = () => {
             count += 1
             return(
                <PointsInfo key={player.id}>
-                  <Span>{count + '. \u00A0\u00A0' + player.displayName}</Span>
-                  <Span>{player.points}</Span>
+                  <Name>{count + '. \u00A0\u00A0' + player.displayName}</Name>
+                  <Point>{player.points}</Point>
                </PointsInfo>
             )
          })}

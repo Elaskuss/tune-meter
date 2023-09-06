@@ -12,6 +12,7 @@ body {
    justify-content: center;
    background-color: #191414;
    color: #ffffff;
+   overflow: hidden;
 }
 
 code {

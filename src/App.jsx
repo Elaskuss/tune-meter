@@ -14,6 +14,7 @@ function App() {
 
     window.addEventListener("beforeunload", function () {
         if (player.id) {
+            navigate("/");
             removeDoc(`players/${player.id}`);
         }
     });
