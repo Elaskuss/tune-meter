@@ -52,4 +52,9 @@ export const Ready = styled.button`
       font-size: 12px;
       width: 100px;
    }
+
+   &:disabled {
+      background-color: #cccccc; /* Change the color for disabled state */
+      cursor: not-allowed;
+   }
 `;

@@ -45,8 +45,7 @@ const Lobby = () => {
 
       setRadyPlayerCount(readyPlayersCount);
 
-      // if (players.length === readyPlayersCount && players.length > 1) {
-      if (players.length === readyPlayersCount) {
+      if (players.length === readyPlayersCount && players.length > 1) {
          countDownHandler(true);
 
          if(!isCountdownActive){
@@ -65,6 +64,7 @@ const Lobby = () => {
             {players.length > 0 &&
                players.map((player) => (
                   <Player
+                     disable={players.length < 2}
                      displayName={player.displayName}
                      id={player.id}
                      key={player.id}
@@ -73,9 +73,8 @@ const Lobby = () => {
                ))}
          </PlayersContainer>
          <PlayerCounter>
-         {readyPlayerCount === players.length ? (
-            // {readyPlayerCount === players.length && players.length > 1 ? (
-               <Info>Music starts in... {countdown}</Info>
+         {readyPlayerCount === players.length && players.length > 1 ? (
+               <Info>Game starts in... {countdown}</Info>
             ) : (
                <Info>
                   {players.length > 1 ? (
@@ -83,7 +82,7 @@ const Lobby = () => {
                         People in lobby ({readyPlayerCount}/{players.length})
                      </span>
                   ) : (
-                     <span>You need more people to create a playlist</span>
+                     <span>You need more people to start the game</span>
                   )}
                </Info>
             )}

@@ -54,7 +54,7 @@ const GameForm = ({ promt, type }) => {
       } else {
          try {
             await joinGame(
-               formFields.gameKey,
+               formFields.gameKey.toLocaleUpperCase(),
                formFields.username,
                updatePlayer,
                updatePlayers

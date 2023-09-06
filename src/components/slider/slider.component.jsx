@@ -58,7 +58,7 @@ const Slider = ({ whosTurn, showVotes }) => {
                                     transform: `rotate(-45deg)`,
                                  }}
                               >
-                                 {thisPlayer.displayName}
+                                 {thisPlayer.displayName.slice(0,3)}
                               </p>
                            </TheAnswer>
                         );
