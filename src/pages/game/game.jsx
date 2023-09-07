@@ -56,7 +56,7 @@ const Game = () => {
                 songs[round].title,
                 songs[round].artist.split(" ")[0]
             );
-            console.log(songs.data[0])
+            console.log(song.data[0])
             setSong(song.data[0].preview);
         }
     };
