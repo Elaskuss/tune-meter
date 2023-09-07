@@ -4,7 +4,7 @@ import { setDoc } from "../config/firebase/realtime_database.js";
 export const PlayerContext = createContext();
 
 const INITIAL_STATE = {
-   players: [],
+   players: [0],
    player: {
       displayName: "",
       gameKey: "",
