@@ -56,6 +56,7 @@ const Game = () => {
                 songs[round].title,
                 songs[round].artist.split(" ")[0]
             );
+            console.log(songs.data[0])
             setSong(song.data[0].preview);
         }
     };
@@ -97,18 +98,25 @@ const Game = () => {
         if (totalGuessed === players.length && !pointsAdded) {
             setPointsAdded(true);
             if (players[whosTurn].id !== player.id) {
-
                 let adjustedRange = 20;
 
-                let difference = Math.abs(players[whosTurn].guessed - player.guessed);
+                let difference = Math.abs(
+                    players[whosTurn].guessed - player.guessed
+                );
                 let rawPoints = 0;
-                
+
                 if (difference <= adjustedRange) {
-                    rawPoints =  -0.001 * Math.pow(difference, 3) + 0.055 * Math.pow(difference, 2) - 1.15 * difference + 10;
+                    rawPoints =
+                        -0.001 * Math.pow(difference, 3) +
+                        0.055 * Math.pow(difference, 2) -
+                        1.15 * difference +
+                        10;
                 }
-    
-                
-                const points = (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
+
+                const points =
+                    (Math.floor(rawPoints) +
+                        (rawPoints % 1 === 0.5 ? 0.5 : 0)) *
+                    10;
 
                 updatePlayer({
                     ...player,
@@ -128,10 +136,13 @@ const Game = () => {
                 <ShowPoints></ShowPoints>
             ) : (
                 <>
-                    {players.length > 0 && (
+                    {players[whosTurn].id !== player.id ? (
                         <Title>
-                            How does {players[whosTurn].displayName} rate it?
+                            Guess how {players[whosTurn].displayName} rates the
+                            song?
                         </Title>
+                    ) : (
+                        <Title>How do you rate the song?</Title>
                     )}
                     <Slider whosTurn={whosTurn} showVotes={showVotes}></Slider>
                     {song ? (
@@ -144,7 +155,7 @@ const Game = () => {
                             <p
                                 style={{
                                     display: "flex",
-                                    justifyContent: "center"
+                                    justifyContent: "center",
                                 }}
                             >
                                 Loading Audio

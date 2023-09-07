@@ -42,3 +42,11 @@ export const PointsInfo = styled.div`
         width: 50%;
     }
 `;
+
+export const Round = styled.h2`
+    font-size: 20px !important;
+    width: 100%;
+    position: absolute;
+    top: 20px;
+    text-align: center;
+`;

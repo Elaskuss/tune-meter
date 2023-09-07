@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { PlayerContext } from "../../context/player.context";
-import { PointsContainer, PointsInfo, Name, Point } from "./show-points.styles";
+import { PointsContainer, PointsInfo, Name, Point, Round } from "./show-points.styles";
 
 const ShowPoints = () => {
     const { players, player } = useContext(PlayerContext);
@@ -9,7 +9,7 @@ const ShowPoints = () => {
     let count = 0;
     return (
         <PointsContainer>
-            <h2>End of round {player.round}</h2>
+            <Round>End of round {player.round}</Round>
             {players.map((player) => {
                 count += 1;
                 return (

@@ -9,7 +9,6 @@ const Player = ({ displayName, id, status, disable }) => {
     const ready = { ...player, status: "Ready" };
 
     const readyHandler = async () => {
-      console.log(disable);
         switch (player.status) {
             case "Ready":
                 updatePlayer(notReady);

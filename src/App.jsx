@@ -20,7 +20,6 @@ function App() {
     });
 
     useEffect(() => {
-        console.log(player);
         if(!player.id){
             //The fetch is to spin up the servers on first time enter so it dosent slow down the page.
             fetchSong("Kick Back", "Kenshi")
