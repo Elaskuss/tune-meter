@@ -98,22 +98,16 @@ const Game = () => {
             setPointsAdded(true);
             if (players[whosTurn].id !== player.id) {
 
-                let adjustedRange;
-                if (player.guessed <= 10) {
-                    adjustedRange = 20 - player.guessed;
-                } else if (player.guessed >= 90) {
-                    adjustedRange = 20 - (100 - player.guessed);
-                } else {
-                    adjustedRange = 10;
-                }
+                let adjustedRange = 20;
 
                 let difference = Math.abs(players[whosTurn].guessed - player.guessed);
                 let rawPoints = 0;
                 
                 if (difference <= adjustedRange) {
-                    rawPoints = Math.abs(10 - difference);
+                    rawPoints =  -0.001 * Math.pow(difference, 3) + 0.055 * Math.pow(difference, 2) - 1.15 * difference + 10;
                 }
     
+                
                 const points = (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
 
                 updatePlayer({

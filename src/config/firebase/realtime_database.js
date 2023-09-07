@@ -11,9 +11,10 @@ import {
     push,
 } from "firebase/database";
 import { dbRealtime } from "./firebase.config";
-import { v4 as uuidv4 } from "uuid";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const db = dbRealtime;
+const auth = getAuth();
 
 //#region Realtime database
 const dbRef = (directory) => {
@@ -85,7 +86,7 @@ export const addToDoc = async (directory, array, updatePlayer, player) => {
     array.forEach((item) => {
         push(dbRef(directory), item);
     });
-    updatePlayer({ ...player});
+    updatePlayer({ ...player });
 };
 
 export const removeDoc = async (directory) => {
@@ -93,22 +94,27 @@ export const removeDoc = async (directory) => {
 };
 
 export const createPlayer = async (displayName, gameKey) => {
-    const id = uuidv4();
+    return signInAnonymously(auth)
+        .then(() => {
+            const player = {
+                id: auth.currentUser.uid,
+                displayName: displayName.toUpperCase(),
+                status: "Not Ready",
+                gameKey: gameKey,
+                gameActive: false,
+                points: 0,
+                guessed: false,
+                round: 0,
+            };
 
-    const player = {
-        id: id,
-        displayName: displayName.toUpperCase(),
-        status: "Not Ready",
-        gameKey: gameKey,
-        gameActive: false,
-        points: 0,
-        guessed: false,
-        round: 0,
-    };
-
-    sessionStorage.setItem("id", id);
-
-    return player;
+            sessionStorage.setItem("id", auth.currentUser.uid);
+            return player;
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+        });
 };
 
 export const createGame = async (displayName, updatePlayer, updatePlayers) => {
