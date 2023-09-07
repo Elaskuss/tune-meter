@@ -56,12 +56,13 @@ const Game = () => {
                 songs[round].title,
                 songs[round].artist.split(" ")[0]
             );
-            console.log(song.data[0])
+            console.log(song.data[0]);
             setSong(song.data[0].preview);
         }
     };
 
     useEffect(() => {
+        setSong(false);
         loadSong();
         calculateWhosTurn();
         // eslint-disable-next-line
