@@ -88,7 +88,7 @@ const Game = () => {
             setTimeout(() => {
                 setShowPoints(true);
                 setRound(player.round);
-            }, 3000);
+            }, 5000);
             setTimeout(() => {
                 setShowPoints(false);
                 setShowVotes(false);
