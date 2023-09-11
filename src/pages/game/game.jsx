@@ -11,6 +11,7 @@ import AudioPlayer from "../../components/audio-player/audio-player.component";
 import Slider from "../../components/slider/slider.component";
 import { PlayerContext } from "../../context/player.context";
 import ShowPoints from "../../components/show-points/show-point";
+import { removeDoc } from "../../config/firebase/realtime_database";
 
 const Game = () => {
     const { players, player, updatePlayer } = useContext(PlayerContext);
@@ -67,6 +68,13 @@ const Game = () => {
         calculateWhosTurn();
         // eslint-disable-next-line
     }, [songs, round]);
+
+    useEffect(() => {
+      if(players.length === 1){
+         removeDoc(`/players/${player.id}`);
+      }
+      // eslint-disable-next-line
+    }, [players])
 
     useEffect(() => {
         const totalGuessed = players.reduce((accumulator, player) => {
