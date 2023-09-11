@@ -15,9 +15,10 @@ export const PlayersContainer = styled.div`
    display: flex;
    flex-direction: column;
    
-   height: 80vh;
+   max-height: 80vh;
    width: 100vw;
    align-items:center;
+   overflow-y: scroll;
 
    @media (max-width: 900px) {
       margin-top: 50px;
