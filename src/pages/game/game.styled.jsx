@@ -9,11 +9,13 @@ export const GameContainer = styled.div`
    overflow: hidden;
 `;
 
-
 export const SliderContainer = styled.div`
    position: relative;
    height: 60%;
-`
+   @media (max-width: 900px) {
+      height: 30%;
+   }
+`;
 
 export const Title = styled.h1`
    width: 100%;
@@ -26,6 +28,5 @@ export const WaitingForContainer = styled.div`
    text-align: center;
    display: flex;
    justify-content: center;
-   align-items: center;
-   bottom: 10px;
+   align-items: start;
 `;
