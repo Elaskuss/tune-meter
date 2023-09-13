@@ -13,7 +13,8 @@ const Index = () => {
 
     useEffect(() => {
         if(localStorage.getItem(("id"))){
-            removeDoc(`/player/${localStorage.getItem(("id"))}`)
+            console.log(localStorage);
+            removeDoc(`/players/${localStorage.getItem(("id"))}`)
             navigate("/")
             localStorage.removeItem("id");
         }
