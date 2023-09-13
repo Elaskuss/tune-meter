@@ -63,6 +63,10 @@ export const TheAnswer = styled.div`
 
 export const Emoji = styled.p`
    font-size: 60px;
+
+   @media (max-width: 900px) {
+      font-size: 30px;
+   }
 `;
 
 export const PointsContainer = styled.div`
