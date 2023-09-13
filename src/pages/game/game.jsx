@@ -2,13 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import {
    GameContainer,
    SliderContainer,
-   Spinner,
    Title,
    WaitingForContainer,
 } from "./game.styled";
 import { getSongs } from "../../config/firebase/firestore";
 import { fetchSong } from "../../config/api/api";
-import AudioPlayer from "../../components/audio-player/audio-player.component";
 import Slider from "../../components/slider/slider.component";
 import { PlayerContext } from "../../context/player.context";
 import ShowPoints from "../../components/show-points/show-point";
@@ -173,25 +171,8 @@ const Game = () => {
                   <Title>How do you rate the song?</Title>
                )}
                <SliderContainer>
-                  <Slider whosTurn={whosTurn} showVotes={showVotes}></Slider>
+                  <Slider whosTurn={whosTurn} song={song} showVotes={showVotes}></Slider>
                </SliderContainer>
-               {song ? (
-                  <AudioPlayer audioUrl={song}></AudioPlayer>
-               ) : (
-                  <>
-                     <Spinner>
-                        <div className="loader"></div>
-                     </Spinner>
-                     <p
-                        style={{
-                           display: "flex",
-                           justifyContent: "center",
-                        }}
-                     >
-                        Loading Audio
-                     </p>
-                  </>
-               )}
                <WaitingForContainer>
                   {players.length === totalGuessed ? (
                      <h2>Prepare for next round...</h2>

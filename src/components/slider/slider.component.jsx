@@ -6,11 +6,13 @@ import {
     PointsContainer,
     SliderContainer,
     SliderInfo,
+    Spinner,
     StyledSlider,
     TheAnswer,
 } from "./slider.styles";
+import AudioPlayer from "../audio-player/audio-player.component";
 
-const Slider = ({ whosTurn, showVotes }) => {
+const Slider = ({ whosTurn, showVotes, song }) => {
     const { player, updatePlayer, players } = useContext(PlayerContext);
     const [value, setValue] = useState(50);
 
@@ -119,6 +121,23 @@ const Slider = ({ whosTurn, showVotes }) => {
             <Confirm onClick={handleClick} disabled={player.guessed}>
                 Confirm
             </Confirm>
+            {song ? (
+                  <AudioPlayer audioUrl={song}></AudioPlayer>
+               ) : (
+                  <>
+                     <Spinner>
+                        <div className="loader"></div>
+                     </Spinner>
+                     <p
+                        style={{
+                           display: "flex",
+                           justifyContent: "center",
+                        }}
+                     >
+                        Loading Audio
+                     </p>
+                  </>
+               )}
         </SliderContainer>
     );
 };
