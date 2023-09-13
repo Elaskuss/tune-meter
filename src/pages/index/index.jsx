@@ -1,5 +1,5 @@
 import {useState } from "react";
-import { Border, NavOptionContainer, PageContainer } from "./index.styles";
+import { Border, NameTag, NavOptionContainer, PageContainer } from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
 import { useEffect } from "react";
@@ -56,6 +56,7 @@ const Index = () => {
                 ) : (
                     <GameForm type={"hidden"} promt={"Create Room"} />
                 )}
+                <NameTag>Created by Ivan Knezevic</NameTag>
             </PageContainer>
     );
 };
