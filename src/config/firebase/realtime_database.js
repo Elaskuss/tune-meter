@@ -130,7 +130,7 @@ export const createGame = async (displayName, updatePlayer, updatePlayers) => {
         if (value === null) {
             const player = await createPlayer(displayName, gameKey);
 
-            await setDoc("lobbies/" + gameKey, { gameActive: false });
+            await setDoc("lobbies/" + gameKey, { host: player.id});
 
             updatePlayer(player);
             onDataChange("players", "gameKey", gameKey, updatePlayers);

@@ -13,7 +13,7 @@ export const GuessPlayerContainer = styled.div`
 
 export const Title = styled.h1`
     width: 100%;
-    position: absolute;
+    position: relative;
     top: 20px;
     text-align: center;
 `;
