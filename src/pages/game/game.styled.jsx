@@ -5,12 +5,14 @@ export const GameContainer = styled.div`
    width: 100vw;
    display: flex;
    flex-direction: column;
-   justify-content: center;
+   justify-content: space-between;
+   overflow: hidden;
 `;
 
 
 export const SliderContainer = styled.div`
-   flex-grow:3;
+   position: relative;
+   height: 60%;
 `
 
 export const Title = styled.h1`
