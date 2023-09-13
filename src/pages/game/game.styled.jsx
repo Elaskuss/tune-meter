@@ -10,7 +10,8 @@ export const GameContainer = styled.div`
 `;
 
 export const SliderContainer = styled.div`
-   position: relative;
+   top: 20%;
+   position: absolute;
 `;
 
 export const Title = styled.h1`
