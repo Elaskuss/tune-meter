@@ -57,8 +57,7 @@ const Slider = ({ whosTurn, showVotes }) => {
                         // eslint-disable-next-line
                         players.map((thisPlayer) => {
                             if (
-                                player.id === players[whosTurn].id &&
-                                thisPlayer.id !== player.id
+                                (thisPlayer.id !== player.id && thisPlayer.id !== players[whosTurn].id)
                             ) {
                                 return (
                                     <TheAnswer

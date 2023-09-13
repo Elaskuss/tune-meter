@@ -108,7 +108,7 @@ export const createPlayer = async (displayName, gameKey) => {
         round: 0,
     };
 
-    sessionStorage.setItem("id", id);
+    localStorage.setItem("id", id);
     return player;
 };
 

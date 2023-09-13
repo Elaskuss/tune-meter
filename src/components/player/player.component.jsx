@@ -27,7 +27,7 @@ const Player = ({ displayName, id, status, disable }) => {
             <DisplayName>{displayName}</DisplayName>
             {player.id === id ? (
                 <Ready disabled={disable} onClick={readyHandler}>
-                    {status}
+                    Ready
                 </Ready>
             ) : (
                 <p>{status}</p>

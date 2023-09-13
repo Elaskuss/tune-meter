@@ -14,6 +14,9 @@ const GameForm = ({ promt, type }) => {
    const [isLoading, setIsLoading] = useState(false);
    const navigate = useNavigate();
    const { updatePlayer, updatePlayers } = useContext(PlayerContext);
+   
+   
+   
    let reconnectPlayer = {};
    if (sessionStorage.getItem("player")) {
       reconnectPlayer = JSON.parse(sessionStorage.getItem("player"));

@@ -2,10 +2,19 @@ import {useState } from "react";
 import { Border, NavOptionContainer, PageContainer } from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
+import { useEffect } from "react";
+import { removeDoc } from "../../config/firebase/realtime_database";
 
 
 const Index = () => {
     const [joinGame, setJoinGame] = useState("join");
+
+    useEffect(() => {
+        if(localStorage.getItem(("id"))){
+            removeDoc(`/player/${localStorage.getItem(("id"))}`)
+            localStorage.removeItemo("id");
+        }
+    }, [])
 
     const handleClick = (event) => {
         setJoinGame(event.target.value);
