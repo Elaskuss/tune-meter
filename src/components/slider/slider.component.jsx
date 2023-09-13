@@ -31,7 +31,7 @@ const Slider = ({ whosTurn, showVotes }) => {
     const calcPoint = () => {
         let adjustedRange = 20;
 
-        let difference = Math.abs(players[whosTurn].guessed - player.guessed);
+        let difference = Math.abs(players[whosTurn]?.guessed - player.guessed);
         let rawPoints = 0;
 
         if (difference <= adjustedRange) {
@@ -46,7 +46,7 @@ const Slider = ({ whosTurn, showVotes }) => {
     return (
         <SliderContainer>
             <h1>
-                {showVotes && player.id !== players[whosTurn].id
+                {showVotes && player.id !== players[whosTurn]?.id
                     ? `You got ${calcPoint()} points`
                     : value}
             </h1>
@@ -57,7 +57,8 @@ const Slider = ({ whosTurn, showVotes }) => {
                         // eslint-disable-next-line
                         players.map((thisPlayer) => {
                             if (
-                                (thisPlayer.id !== player.id && thisPlayer.id !== players[whosTurn].id)
+                                player.id === players[whosTurn]?.id &&
+                                thisPlayer.id !== player.id
                             ) {
                                 return (
                                     <TheAnswer
@@ -91,13 +92,13 @@ const Slider = ({ whosTurn, showVotes }) => {
                         disabled={player.guessed}
                         onChange={handleSliderChange}
                     ></StyledSlider>
-                    {showVotes && player.id !== players[whosTurn].id && (
+                    {showVotes && player.id !== players[whosTurn]?.id && (
                         <TheAnswer
                             style={{
                                 backgroundColor: "green",
-                                left: `${players[whosTurn].guessed}%`,
+                                left: `${players[whosTurn]?.guessed}%`,
                                 transform: `translate(${calculateRatio(
-                                    players[whosTurn].guessed
+                                    players[whosTurn]?.guessed
                                 )}%, 50%) rotate(45deg)`,
                                 borderRadius: "0 30px 30px 30px",
                             }}
@@ -108,7 +109,7 @@ const Slider = ({ whosTurn, showVotes }) => {
                                     transform: `rotate(-45deg)`,
                                 }}
                             >
-                                {players[whosTurn].guessed}
+                                {players[whosTurn]?.guessed}
                             </p>
                         </TheAnswer>
                     )}
