@@ -26,7 +26,17 @@ const Player = ({ displayName, id, status, disable }) => {
         <PlayerContainer key={id}>
             <DisplayName>{displayName}</DisplayName>
             {player.id === id ? (
-                <Ready disabled={disable} onClick={readyHandler}>
+                <Ready
+                    disabled={disable}
+                    onClick={readyHandler}
+                    style={
+                        player.status === "Not Ready"
+                            ? {
+                                  backgroundColor: "#B9541D",
+                              }
+                            : { backgroundColor: "#1db954" }
+                    }
+                >
                     Ready
                 </Ready>
             ) : (

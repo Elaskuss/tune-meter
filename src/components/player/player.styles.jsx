@@ -39,14 +39,13 @@ export const Ready = styled.button`
    width: 150px;
    height: 50px;
    align-self: center;
-   background-color: #1db954; 
    color: #ffffff;
    font-weight: 700;
    border: none;
    border-radius: 50px;
    font-size: 16px;
    cursor: pointer;
-   
+
    @media (max-width: 900px) {
       padding: 3px 5px;
       font-size: 12px;
@@ -54,7 +53,7 @@ export const Ready = styled.button`
    }
 
    &:disabled {
-      background-color: #cccccc; /* Change the color for disabled state */
+      background-color: #cccccc !important; /* Change the color for disabled state */
       cursor: not-allowed;
    }
 `;
