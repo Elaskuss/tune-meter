@@ -86,6 +86,7 @@ export const Confirm = styled.button`
    border-radius: 50px;
    font-size: 16px;
    cursor: pointer;
+   margin-top: 30px;
 
    &:disabled {
       background-color: #cccccc; /* Change the color for disabled state */

@@ -16,8 +16,7 @@ export const SliderContainer = styled.div`
 
 export const Title = styled.h1`
    position: absolute;
-   top: 0px;
-   margin-top: 10px;
+   top: 20px;
    padding: 0px;
    width: 100%;
    text-align: center;
