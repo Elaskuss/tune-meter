@@ -5,25 +5,29 @@ export const GameContainer = styled.div`
    width: 100vw;
    display: flex;
    flex-direction: column;
-   justify-content: space-between;
+   justify-content: center;
    overflow: hidden;
 `;
 
 export const SliderContainer = styled.div`
    position: relative;
-   height: 60%;
-   @media (max-width: 900px) {
-      height: 30%;
-   }
 `;
 
 export const Title = styled.h1`
+   position: absolute;
+   top: 0px;
    width: 100%;
    text-align: center;
+
+   @media (max-width: 900px) {
+      font-size: 24px;
+   }
 `;
 
-export const WaitingForContainer = styled.div`
-   position: relative;
+export const WaitingForContainer = styled.h4`
+   width: 100%;
+   position: absolute;
+   bottom: 10px;
    box-sizing: border-box;
    text-align: center;
    display: flex;
