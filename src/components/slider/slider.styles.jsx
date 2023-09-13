@@ -3,7 +3,7 @@ const { styled } = require("styled-components");
 export const SliderContainer = styled.div`
    display: flex;
    width: 100vw;
-   height: 60vh;
+   height: 100%;
    justify-content: center;
    align-items: center;
    flex-direction: column;

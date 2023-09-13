@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import {
    GameContainer,
+   SliderContainer,
    Spinner,
    Title,
    WaitingForContainer,
@@ -171,7 +172,9 @@ const Game = () => {
                ) : (
                   <Title>How do you rate the song?</Title>
                )}
-               <Slider whosTurn={whosTurn} showVotes={showVotes}></Slider>
+               <SliderContainer>
+                  <Slider whosTurn={whosTurn} showVotes={showVotes}></Slider>
+               </SliderContainer>
                {song ? (
                   <AudioPlayer audioUrl={song}></AudioPlayer>
                ) : (

@@ -8,14 +8,18 @@ export const GameContainer = styled.div`
    justify-content: center;
 `;
 
+
+export const SliderContainer = styled.div`
+   flex-grow:3;
+`
+
 export const Title = styled.h1`
-   position: absolute;
    width: 100%;
-   margin-top: 20px;
    text-align: center;
 `;
 
 export const WaitingForContainer = styled.div`
+   position: relative;
    box-sizing: border-box;
    text-align: center;
    display: flex;
