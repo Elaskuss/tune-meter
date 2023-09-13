@@ -4,16 +4,20 @@ import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
 import { useEffect } from "react";
 import { removeDoc } from "../../config/firebase/realtime_database";
+import { useNavigate } from "react-router-dom";
 
 
 const Index = () => {
     const [joinGame, setJoinGame] = useState("join");
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(localStorage.getItem(("id"))){
             removeDoc(`/player/${localStorage.getItem(("id"))}`)
+            navigate("/")
             localStorage.removeItemo("id");
         }
+        // eslint-disable-next-line
     }, [])
 
     const handleClick = (event) => {
