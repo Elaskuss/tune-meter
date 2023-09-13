@@ -15,7 +15,7 @@ const Index = () => {
         if(localStorage.getItem(("id"))){
             removeDoc(`/player/${localStorage.getItem(("id"))}`)
             navigate("/")
-            localStorage.removeItemo("id");
+            localStorage.removeItem("id");
         }
         // eslint-disable-next-line
     }, [])
