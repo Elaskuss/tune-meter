@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import {
    GameContainer,
+   RoundInfo,
    SliderContainer,
    Title,
    WaitingForContainer,
@@ -175,12 +176,12 @@ const Game = () => {
                </SliderContainer>
                <WaitingForContainer>
                   {players.length === totalGuessed ? (
-                     <h2>Prepare for next round...</h2>
+                     <RoundInfo>Prepare for next round...</RoundInfo>
                   ) : (
-                     <h2>
+                     <RoundInfo>
                         Waiting for {players.length - totalGuessed + " "}
                         players to guess
-                     </h2>
+                     </RoundInfo>
                   )}
                </WaitingForContainer>
             </>

@@ -5,7 +5,8 @@
 }
 
 body {
-   margin: 0;
+   padding: 0px;
+   margin: 0px;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    display: flex;

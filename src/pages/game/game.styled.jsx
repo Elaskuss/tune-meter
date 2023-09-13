@@ -16,6 +16,8 @@ export const SliderContainer = styled.div`
 export const Title = styled.h1`
    position: absolute;
    top: 0px;
+   margin-top: 10px;
+   padding: 0px;
    width: 100%;
    text-align: center;
 
@@ -24,7 +26,7 @@ export const Title = styled.h1`
    }
 `;
 
-export const WaitingForContainer = styled.h4`
+export const WaitingForContainer = styled.div`
    width: 100%;
    position: absolute;
    bottom: 10px;
@@ -33,4 +35,11 @@ export const WaitingForContainer = styled.h4`
    display: flex;
    justify-content: center;
    align-items: start;
+   margin: 0px;
+   padding: 0px;
+`;
+
+export const RoundInfo = styled.h3`
+   margin-bottom: 10px;
+   padding: 0px;
 `;
