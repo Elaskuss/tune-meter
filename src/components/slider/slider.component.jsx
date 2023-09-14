@@ -126,7 +126,7 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                ) : (
                   <>
                      <Spinner>
-                        <div className="loader"></div>
+                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                      </Spinner>
                      <p
                         style={{
