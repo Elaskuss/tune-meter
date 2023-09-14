@@ -1,7 +1,6 @@
 import { styled } from "styled-components";
 
 export const GameContainer = styled.div`
-   height: 100vh;
    width: 100vw;
    display: flex;
    flex-direction: column;
@@ -20,6 +19,7 @@ export const Title = styled.h1`
    padding: 0px;
    width: 100%;
    text-align: center;
+   margin: 0px;
 
    @media (max-width: 900px) {
       font-size: 24px;
@@ -42,4 +42,5 @@ export const WaitingForContainer = styled.div`
 export const RoundInfo = styled.h3`
    margin-bottom: 10px;
    padding: 0px;
+   margin: 0px;
 `;
