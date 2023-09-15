@@ -47,5 +47,5 @@ export const Info = styled.h2`
 `
 
 export const BottomItems = styled.div`
-   align-self: flex-end;
+   
 `
