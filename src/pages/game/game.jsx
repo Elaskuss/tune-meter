@@ -26,6 +26,7 @@ const Game = () => {
   const [pointsAdded, setPointsAdded] = useState(false);
   const [totalGuessed, setTotalGuessed] = useState(0);
   const [catagory, setCatagory] = useState("Top 100");
+  const [skipRoundFallback, setSkipRoundFallback] = useState(0);
   const navigate = useNavigate();
 
   function customShuffle(array, code) {
@@ -113,7 +114,12 @@ const Game = () => {
       }
     } else {
       if (songs.length) {
-        setSong(songs[round]);
+        if(songs[round]){
+          setSong(songs[round]);
+        } else {
+          setSong(songs[songs.length-1-skipRoundFallback]);
+          setSkipRoundFallback(skipRoundFallback - 1);
+        }
       }
     }
   };
