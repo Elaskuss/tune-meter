@@ -12,7 +12,6 @@ export const NavOptionContainer = styled.div`
 
 export const PageContainer = styled.div`
     width: 70vw;
-    height: 100vh;
     display: flex;
     align-items: center;
     flex-direction: column;

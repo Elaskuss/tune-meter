@@ -2,7 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 import Player from "../../components/player/player.component";
-import { GameKey, Info, LobbyContainer, PlayerCounter, PlayersContainer } from "./lobby.styles";
+import {
+   GameKey,
+   Info,
+   LobbyContainer,
+   PlayerCounter,
+   PlayersContainer,
+} from "./lobby.styles";
 
 const Lobby = () => {
    const navigate = useNavigate();
@@ -26,14 +32,13 @@ const Lobby = () => {
          );
       } else if (isCountdownActive && countdown === 0) {
          setIsCountdownActive(false);
-         updatePlayer({...player, totalPlayers: players.length });
+         updatePlayer({ ...player, totalPlayers: players.length });
          navigate("/game", { replace: true });
       }
 
       return () => clearInterval(timer);
       // eslint-disable-next-line
    }, [isCountdownActive, countdown]);
-
 
    useEffect(() => {
       const readyPlayersCount = players.reduce((count, player) => {
@@ -48,7 +53,7 @@ const Lobby = () => {
       if (players.length === readyPlayersCount && players.length > 1) {
          countDownHandler(true);
 
-         if(!isCountdownActive){
+         if (!isCountdownActive) {
             setCountdown(3);
          }
       } else {
@@ -58,7 +63,11 @@ const Lobby = () => {
    }, [players]);
 
    return (
-      <LobbyContainer>
+      <LobbyContainer
+         style={{
+            height: `${window.innerHeight} px`,
+         }}
+      >
          <GameKey>{gameKey}</GameKey>
          <PlayersContainer>
             {players.length > 0 &&
@@ -73,7 +82,7 @@ const Lobby = () => {
                ))}
          </PlayersContainer>
          <PlayerCounter>
-         {readyPlayerCount === players.length && players.length > 1 ? (
+            {readyPlayerCount === players.length && players.length > 1 ? (
                <Info>Game starts in... {countdown}</Info>
             ) : (
                <Info>

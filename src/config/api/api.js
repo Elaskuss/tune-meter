@@ -4,7 +4,7 @@ export async function fetchSong(track, artist) {
   
   while (retryCount < maxRetries) {
     try {
-      const response = await fetch(`https://express-tune-meter.onrender.com/deezer/search/?track=${encodeURIComponent(track)}&artist=${encodeURIComponent(artist)}`);
+      const response = await fetch(`https://us-central1-lobby-eef07.cloudfunctions.net/app/deezer/search/?track=${encodeURIComponent(track)}&artist=${encodeURIComponent(artist)}`);
       
       if (response.ok) {
         const data = await response.json();
