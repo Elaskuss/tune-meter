@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 export const LobbyContainer = styled.div`
    width: 100vw;
-   align-items: center;
-
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
    h2 {
       justify-content: center;
       text-align: center;
@@ -38,13 +39,13 @@ export const GameKey = styled.h1`
 `;
 
 export const PlayerCounter = styled.div`
-   width: 80%;
+   width: 100%;
    box-sizing: border-box;
-   position: absolute;
-   left: 50%;
-   bottom: 10px;
-   transform: translate(-50%, 0%);
 `
 export const Info = styled.h2`
 
+`
+
+export const BottomItems = styled.div`
+   align-self: flex-end;
 `

@@ -3,101 +3,120 @@ import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 import Player from "../../components/player/player.component";
 import {
-   GameKey,
-   Info,
-   LobbyContainer,
-   PlayerCounter,
-   PlayersContainer,
+   BottomItems,
+  GameKey,
+  Info,
+  LobbyContainer,
+  PlayerCounter,
+  PlayersContainer,
 } from "./lobby.styles";
+import { getDoc } from "../../config/firebase/realtime_database";
+import SelectCatagory from "../../components/select-catagory/select-catagory.component";
 
 const Lobby = () => {
-   const navigate = useNavigate();
-   const { players, player, updatePlayer } = useContext(PlayerContext);
-   const [countdown, setCountdown] = useState(3);
-   const [isCountdownActive, setIsCountdownActive] = useState(false);
-   const [readyPlayerCount, setRadyPlayerCount] = useState(0);
+  const navigate = useNavigate();
+  const { players, player, updatePlayer } = useContext(PlayerContext);
+  const [countdown, setCountdown] = useState(3);
+  const [isCountdownActive, setIsCountdownActive] = useState(false);
+  const [readyPlayerCount, setRadyPlayerCount] = useState(0);
+  const [host, setHost] = useState(0);
 
-   const gameKey = player.gameKey;
+  const gameKey = player.gameKey;
 
-   const countDownHandler = (value) => {
-      setIsCountdownActive(value);
-   };
+  const countDownHandler = (value) => {
+    setIsCountdownActive(value);
+  };
 
-   useEffect(() => {
-      let timer;
-      if (isCountdownActive && countdown > 0) {
-         timer = setInterval(
-            () => setCountdown((prevCountdown) => prevCountdown - 1),
-            1000
-         );
-      } else if (isCountdownActive && countdown === 0) {
-         setIsCountdownActive(false);
-         updatePlayer({ ...player, totalPlayers: players.length });
-         navigate("/game", { replace: true });
+  useEffect(() => {
+   
+    const showCategories = async () => {
+      const lobby = await getDoc(`lobbies/${player.gameKey}`);
+
+      setHost(lobby.host);
+    };
+
+    showCategories();
+  });
+
+  useEffect(() => {
+    let timer;
+    if (isCountdownActive && countdown > 0) {
+      timer = setInterval(
+        () => setCountdown((prevCountdown) => prevCountdown - 1),
+        1000
+      );
+    } else if (isCountdownActive && countdown === 0) {
+      setIsCountdownActive(false);
+      updatePlayer({ ...player, totalPlayers: players.length });
+      navigate("/game", { replace: true });
+    }
+
+    return () => clearInterval(timer);
+    // eslint-disable-next-line
+  }, [isCountdownActive, countdown]);
+
+  useEffect(() => {
+    const readyPlayersCount = players.reduce((count, player) => {
+      if (player.status === "Ready") {
+        return count + 1;
       }
+      return count;
+    }, 0);
 
-      return () => clearInterval(timer);
-      // eslint-disable-next-line
-   }, [isCountdownActive, countdown]);
+    setRadyPlayerCount(readyPlayersCount);
 
-   useEffect(() => {
-      const readyPlayersCount = players.reduce((count, player) => {
-         if (player.status === "Ready") {
-            return count + 1;
-         }
-         return count;
-      }, 0);
+    if (players.length === readyPlayersCount && players.length > 1) {
+      countDownHandler(true);
 
-      setRadyPlayerCount(readyPlayersCount);
-
-      if (players.length === readyPlayersCount && players.length > 1) {
-         countDownHandler(true);
-
-         if (!isCountdownActive) {
-            setCountdown(3);
-         }
-      } else {
-         countDownHandler(false);
+      if (!isCountdownActive) {
+        setCountdown(3);
       }
-      // eslint-disable-next-line
-   }, [players]);
+    } else {
+      countDownHandler(false);
+    }
+    // eslint-disable-next-line
+  }, [players]);
 
-   return (
-      <LobbyContainer
-         style={{
-            height: `${window.innerHeight} px`,
-         }}
-      >
-         <GameKey>{gameKey}</GameKey>
-         <PlayersContainer>
-            {players.length > 0 &&
-               players.map((player) => (
-                  <Player
-                     disable={players.length < 2}
-                     displayName={player.displayName}
-                     id={player.id}
-                     key={player.id}
-                     status={player.status}
-                  />
-               ))}
-         </PlayersContainer>
-         <PlayerCounter>
-            {readyPlayerCount === players.length && players.length > 1 ? (
-               <Info>Game starts in... {countdown}</Info>
+  return (
+    <LobbyContainer
+      style={{
+        minHeight: `${window.innerHeight}px`,
+      }}
+    >
+      <GameKey>{gameKey}</GameKey>
+      <PlayersContainer>
+        {players.length > 0 &&
+          players.map((player) => (
+            <Player
+              disable={players.length < 2}
+              displayName={player.displayName}
+              id={player.id}
+              key={player.id}
+              status={player.status}
+            />
+          ))}
+      </PlayersContainer>
+      <BottomItems>
+      {host === player.id && <SelectCatagory />}
+      <PlayerCounter>
+        {readyPlayerCount === players.length && players.length > 1 ? (
+          <Info>Game starts in... {countdown}</Info>
+        ) : (
+          <Info>
+            {players.length > 1 ? (
+              <span>
+                People in lobby ({readyPlayerCount}/{players.length})
+              </span>
             ) : (
-               <Info>
-                  {players.length > 1 ? (
-                     <span>
-                        People in lobby ({readyPlayerCount}/{players.length})
-                     </span>
-                  ) : (
-                     <span>You need more people to start the game</span>
-                  )}
-               </Info>
+              <span>You need more people to start the game</span>
             )}
-         </PlayerCounter>
-      </LobbyContainer>
-   );
+          </Info>
+        )}
+      </PlayerCounter>
+      </BottomItems> 
+
+    </LobbyContainer>
+  );
 };
 
 export default Lobby;

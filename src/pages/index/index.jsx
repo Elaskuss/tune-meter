@@ -40,7 +40,7 @@ const Index = () => {
    return (
       <PageContainer
          style={{
-            height: `${window.innerHeight} px`,
+            minHeight: `${window.innerHeight}px`,
          }}
       >
          <NavOptionContainer>

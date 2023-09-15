@@ -14,9 +14,9 @@ const INITIAL_STATE = {
       disconnected: false,
       guessed: false,
       round: 0,
+      catagory: "Top 100",
    },
    songs: [false],
-   spotifyPlayer: null,
 };
 
 // Define your playersReducer function
@@ -36,11 +36,6 @@ const playersReducer = (state, action) => {
          return {
             ...state,
             songs: action.payload,
-         };
-      case "UPDATE_SPOTIFY_PLAYER":
-         return {
-            ...state,
-            spotifyPlayer: action.payload,
          };
       default:
          return state;
