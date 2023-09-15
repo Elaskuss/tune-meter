@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 
 export const PointsContainer = styled.div`
-    margin-top: 50px;
+    margin-top: 100px;
     display: flex;
     min-height: 150px;
     flex-direction: column;

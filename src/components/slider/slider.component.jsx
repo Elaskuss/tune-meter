@@ -6,6 +6,7 @@ import {
     PointsContainer,
     SliderContainer,
     SliderInfo,
+    SliderValue,
     Spinner,
     StyledSlider,
     TheAnswer,
@@ -47,11 +48,11 @@ const Slider = ({ whosTurn, showVotes, song }) => {
 
     return (
         <SliderContainer>
-            <h1>
+            <SliderValue>
                 {showVotes && player.id !== players[whosTurn]?.id
                     ? `You got ${calcPoint()} points`
                     : value}
-            </h1>
+            </SliderValue>
             <SliderInfo>
                 <Emoji>🗑️</Emoji>
                 <PointsContainer>
