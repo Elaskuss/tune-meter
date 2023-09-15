@@ -43,4 +43,5 @@ export const RoundInfo = styled.h3`
    margin-bottom: 10px;
    padding: 0px;
    margin: 0px;
+   text-align: center;
 `;
