@@ -96,11 +96,13 @@ const Game = () => {
           songs = songData.tracks.data.map((song) => song.preview);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
+          break;
         case "80s":
           songData = await fetchCatagory(867825522);
           songs = songData.tracks.data.map((song) => song.preview);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
+          break;
         case "90s":
           songData = await fetchCatagory(878989033);
           songs = songData.tracks.data.map((song) => song.preview);
