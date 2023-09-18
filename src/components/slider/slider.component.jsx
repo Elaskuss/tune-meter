@@ -38,7 +38,11 @@ const Slider = ({ whosTurn, showVotes, song }) => {
         let rawPoints = 0;
 
         if (difference <= adjustedRange) {
-            rawPoints = -0.001 * Math.pow(difference, 3) + 0.055 * Math.pow(difference, 2) - 1.15 * difference + 10;
+            rawPoints =
+                -0.001 * Math.pow(difference, 3) +
+                0.055 * Math.pow(difference, 2) -
+                1.15 * difference +
+                10;
         }
 
         const points =
@@ -60,8 +64,7 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                         // eslint-disable-next-line
                         players.map((thisPlayer) => {
                             if (
-                                player.id === players[whosTurn]?.id &&
-                                thisPlayer.id !== player.id
+                                (player.id === players[whosTurn]?.id && player.id !== thisPlayer.id) || (player.id !== players[whosTurn]?.id && player.id !== thisPlayer.id && thisPlayer.id !== players[whosTurn]?.id)
                             ) {
                                 return (
                                     <TheAnswer
@@ -123,22 +126,27 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                 Confirm
             </Confirm>
             {song ? (
-                  <AudioPlayer audioUrl={song}></AudioPlayer>
-               ) : (
-                  <>
-                     <Spinner>
-                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                     </Spinner>
-                     <p
+                <AudioPlayer audioUrl={song}></AudioPlayer>
+            ) : (
+                <>
+                    <Spinner>
+                        <div class="lds-ellipsis">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </Spinner>
+                    <p
                         style={{
-                           display: "flex",
-                           justifyContent: "center",
+                            display: "flex",
+                            justifyContent: "center",
                         }}
-                     >
+                    >
                         Loading Audio
-                     </p>
-                  </>
-               )}
+                    </p>
+                </>
+            )}
         </SliderContainer>
     );
 };
