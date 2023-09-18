@@ -31,13 +31,13 @@ const Player = ({ displayName, id, status, disable }) => {
                     onClick={readyHandler}
                     style={
                         player.status === "Not Ready"
-                            ? {
-                                  backgroundColor: "#B9541D",
-                              }
-                            : { backgroundColor: "#1db954" }
+                            ? 
+                            { backgroundColor: "#B9541D" }
+                              
+                           : { backgroundColor: "#1db954" }
                     }
                 >
-                    Ready
+                    {player.status === "Not Ready" ? "Not Ready" : "Ready"}
                 </Ready>
             ) : (
                 <p>{status}</p>

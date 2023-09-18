@@ -8,13 +8,14 @@ export const ChooseCatagory = styled.div`
   flex-direction: column;
 `;
 export const SelectCatagoryButton = styled.button`
-  flex-grow: 1;
+  min-height: 25%;
   color: white;
   font-size: 40px;
   font-weight: 800;
   box-sizing: border-box;
   background-color: #1db954;
   border: 1px solid black;
+  overflow: scroll;
 `;
 
 export const CatagoryContainer = styled.div`

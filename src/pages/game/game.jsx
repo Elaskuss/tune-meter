@@ -77,12 +77,35 @@ const Game = () => {
           setSongs(shuffledSongs);
 
           break;
+        case "Country":
+          songData = await fetchCatagory(1130102843);
+          songs = songData.tracks.data.map((song) => song.preview);
+          shuffledSongs = customShuffle(songs, player.gameKey);
+          setSongs(shuffledSongs);
+
+          break;
+        case "Rap":
+          songData = await fetchCatagory(11641952984);
+          songs = songData.tracks.data.map((song) => song.preview);
+          shuffledSongs = customShuffle(songs, player.gameKey);
+          setSongs(shuffledSongs);
+
+          break;
         case "00s":
           songData = await fetchCatagory(248297032);
           songs = songData.tracks.data.map((song) => song.preview);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
-
+        case "80s":
+          songData = await fetchCatagory(867825522);
+          songs = songData.tracks.data.map((song) => song.preview);
+          shuffledSongs = customShuffle(songs, player.gameKey);
+          setSongs(shuffledSongs);
+        case "90s":
+          songData = await fetchCatagory(878989033);
+          songs = songData.tracks.data.map((song) => song.preview);
+          shuffledSongs = customShuffle(songs, player.gameKey);
+          setSongs(shuffledSongs);
           break;
         default:
           songs = await getSongs();
