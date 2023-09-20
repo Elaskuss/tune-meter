@@ -93,7 +93,7 @@ export const FooterContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   margin: 0px;
   bottom: 30px;
 `;

@@ -43,6 +43,13 @@ const SelectCatagory = () => {
         });
         setToggle(!toggle);
         break;
+      case "K-pop":
+        updateDoc(`lobbies/${player.gameKey}`, {
+          host: player.id,
+          catagory: "K-pop",
+        });
+        setToggle(!toggle);
+        break;
       case "00s":
         updateDoc(`lobbies/${player.gameKey}`, {
           host: player.id,
@@ -87,7 +94,6 @@ const SelectCatagory = () => {
     if (!toggle) {
       const setCatagoryName = async () => {
         const lobby = await getDoc(`lobbies/${player.gameKey}`);
-        console.log(lobby);
         setSelectedCatagory(lobby.catagory);
       };
       setCatagoryName();
@@ -125,6 +131,9 @@ const SelectCatagory = () => {
           </SelectCatagoryButton>
           <SelectCatagoryButton onClick={handleCatagory}>
             Rap
+          </SelectCatagoryButton>
+          <SelectCatagoryButton onClick={handleCatagory}>
+            K-pop
           </SelectCatagoryButton>
           <SelectCatagoryButton onClick={handleCatagory}>
             00s
