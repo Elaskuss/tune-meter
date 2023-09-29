@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const ChooseCatagory = styled.div`
   top: 0px;
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   display: flex;
   flex-direction: column;
