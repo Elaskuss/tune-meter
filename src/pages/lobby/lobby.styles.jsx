@@ -15,6 +15,7 @@ export const PlayersContainer = styled.div`
    display: flex;
    flex-direction: column;
    
+   min-height: 80vh;
    max-height: 80vh;
    width: 100vw;
    align-items:center;
@@ -47,5 +48,5 @@ export const Info = styled.h2`
 `
 
 export const BottomItems = styled.div`
-   
+
 `
