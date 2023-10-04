@@ -76,8 +76,9 @@ const Lobby = () => {
     // eslint-disable-next-line
   }, [players]);
 
+
   return (
-    <LobbyContainer containerHeight={window.innerHeight}>
+    <LobbyContainer containerHeight={document.documentElement.clientHeight}>
       <GameKey id="GameKey">{gameKey}</GameKey>
       <PlayersContainer>
         {players.length > 0 &&
