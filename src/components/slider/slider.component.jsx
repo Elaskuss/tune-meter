@@ -137,14 +137,6 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                             <div></div>
                         </div>
                     </Spinner>
-                    <p
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                        }}
-                    >
-                        Loading Audio
-                    </p>
                 </>
             )}
         </SliderContainer>

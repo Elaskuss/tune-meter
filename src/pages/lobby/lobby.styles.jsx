@@ -48,4 +48,5 @@ export const Info = styled.h2``;
 export const BottomItems = styled.div`
   position: fixed;
   bottom: 10px;
+  width: 100%;
 `;
