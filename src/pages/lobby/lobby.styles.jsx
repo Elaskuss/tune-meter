@@ -14,9 +14,14 @@ export const LobbyContainer = styled.div`
 `;
 export const PlayersContainer = styled.div`
   display: flex;
+  min-height: ${props => props.containerHeight}px;
+  max-height: ${props => props.containerHeight}px;
   flex-direction: column;
   width: 100vw;
   align-items: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  overflow-y: auto;
 `;
 export const GameKey = styled.h1`
   align-self: center;

@@ -80,7 +80,7 @@ const Lobby = () => {
   return (
     <LobbyContainer containerHeight={document.documentElement.clientHeight}>
       <GameKey id="GameKey">{gameKey}</GameKey>
-      <PlayersContainer>
+      <PlayersContainer containerHeight={document.getElementById("BottomItems") ? document.documentElement.clientHeight - parseInt(window.getComputedStyle(document.getElementById("BottomItems")).height) - parseInt(window.getComputedStyle(document.getElementById("GameKey")).height) - 50 : 300}>
         {players.length > 0 &&
           players.map((player) => (
             <Player
