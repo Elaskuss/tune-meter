@@ -113,8 +113,8 @@ const SelectCatagory = () => {
       ) : (
         <ChooseCatagory
           style={{
-            height: window.innerHeight,
-            width: window.innerWidth,
+            height: document.documentElement.clientHeight,
+            width: document.documentElement.clientWidth,
           }}
         >
           <SelectCatagoryButton onClick={handleCatagory}>

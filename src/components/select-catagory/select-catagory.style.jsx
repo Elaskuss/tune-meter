@@ -6,6 +6,7 @@ export const ChooseCatagory = styled.div`
   z-index: 1000;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 `;
 export const SelectCatagoryButton = styled.button`
   min-height: 25%;
