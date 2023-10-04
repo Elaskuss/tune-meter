@@ -5,6 +5,7 @@ export const LobbyContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: ${props => props.containerHeight}px;
   h2 {
     justify-content: center;
     text-align: center;

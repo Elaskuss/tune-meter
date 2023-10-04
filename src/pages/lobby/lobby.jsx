@@ -77,22 +77,9 @@ const Lobby = () => {
   }, [players]);
 
   return (
-    <LobbyContainer
-      style={{
-        minHeight: `${window.innerHeight}px`,
-      }}
-    >
+    <LobbyContainer containerHeight={window.innerHeight}>
       <GameKey id="GameKey">{gameKey}</GameKey>
-      <PlayersContainer
-        style={
-          document.getElementById("GameKey") &&
-          {
-            maxHeight: `${window.innerHeight - parseInt(window.getComputedStyle(document.getElementById("GameKey")).height) - parseInt(window.getComputedStyle(document.getElementById("BottomItems")).height)}px`,
-            minHeight: `${window.innerHeight - parseInt(window.getComputedStyle(document.getElementById("GameKey")).height) - parseInt(window.getComputedStyle(document.getElementById("BottomItems")).height)}px`
-          }
-        }
-      >
-        {console.log(document.getElementById("BottomItems"))}
+      <PlayersContainer>
         {players.length > 0 &&
           players.map((player) => (
             <Player
