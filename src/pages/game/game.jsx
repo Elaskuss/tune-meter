@@ -29,9 +29,12 @@ const Game = () => {
   const [catagory, setCatagory] = useState("Top 100");
   const navigate = useNavigate();
 
-  function customShuffle(arrToSort, inputString) {
+  function customShuffle(arrToSort, inputString, scraped = false) {
     const chance = new Chance(inputString);
-    const sortedArray = chance.shuffle(arrToSort);
+    let sortedArray = chance.shuffle(arrToSort);
+    if (!scraped) {
+      sortedArray = sortedArray.filter((song) => song !== "");
+    }
     console.log(sortedArray);
     return sortedArray;
   }
@@ -53,8 +56,7 @@ const Game = () => {
       switch (lobby.catagory) {
         case "Top 100":
           songs = await getSongs();
-          shuffledSongs = customShuffle(songs, player.gameKey);
-          shuffledSongs.forEach((item) => {});
+          shuffledSongs = customShuffle(songs, player.gameKey, true);
           setSongs(shuffledSongs);
 
           break;
