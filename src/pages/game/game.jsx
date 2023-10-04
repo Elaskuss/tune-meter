@@ -13,6 +13,7 @@ import { PlayerContext } from "../../context/player.context";
 import ShowPoints from "../../components/show-points/show-point";
 import { getDoc, removeDoc } from "../../config/firebase/realtime_database";
 import { useNavigate } from "react-router-dom";
+import { Chance } from "chance";
 
 const Game = () => {
   const { players, player, updatePlayer } = useContext(PlayerContext);
@@ -29,22 +30,9 @@ const Game = () => {
   const navigate = useNavigate();
 
   function customShuffle(arrToSort, inputString) {
-    if (!inputString) return;
-    let asciiArray = [];
-
-    for (let i = 0; i < inputString.length; i++) {
-      let asciiValue = inputString.charCodeAt(i);
-      asciiArray.push(asciiValue);
-    }
-
-    while (asciiArray.length < arrToSort.length) {
-      asciiArray.push(...asciiArray);
-    }
-    let indices = Array.from(arrToSort.keys());
-    indices.sort((a, b) => asciiArray[a] - asciiArray[b]);
-
-    let sortedArray = indices.map((index) => arrToSort[index]);
-
+    const chance = new Chance(inputString);
+    const sortedArray = chance.shuffle(arrToSort);
+    console.log(sortedArray);
     return sortedArray;
   }
 
@@ -66,8 +54,7 @@ const Game = () => {
         case "Top 100":
           songs = await getSongs();
           shuffledSongs = customShuffle(songs, player.gameKey);
-          shuffledSongs.forEach((item) => {
-          });
+          shuffledSongs.forEach((item) => {});
           setSongs(shuffledSongs);
 
           break;
@@ -177,7 +164,6 @@ const Game = () => {
   }, [songs, round]);
 
   useEffect(() => {
-
     if (players.length === 1) {
       removeDoc(`/players/${player.id}`);
       navigate("/");
