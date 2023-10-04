@@ -4,7 +4,7 @@ export const LobbyContainer = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   h2 {
     justify-content: center;
     text-align: center;
@@ -14,20 +14,10 @@ export const LobbyContainer = styled.div`
 export const PlayersContainer = styled.div`
   display: flex;
   flex-direction: column;
-
-  min-height: 70vh;
-  max-height: 70vh;
   width: 100vw;
   align-items: center;
-  overflow-y: scroll;
-
-  @media (max-width: 900px) {
-    margin-top: 50px;
-  }
 `;
 export const GameKey = styled.h1`
-  position: fixed;
-  top: 20px;
   align-self: center;
   text-align: center;
   margin: 0px;
@@ -46,7 +36,5 @@ export const PlayerCounter = styled.div`
 export const Info = styled.h2``;
 
 export const BottomItems = styled.div`
-  position: fixed;
-  bottom: 10px;
   width: 100%;
 `;

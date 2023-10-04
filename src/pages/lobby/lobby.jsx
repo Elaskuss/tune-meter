@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 import Player from "../../components/player/player.component";
 import {
-   BottomItems,
+  BottomItems,
   GameKey,
   Info,
   LobbyContainer,
@@ -28,7 +28,6 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-   
     const showCategories = async () => {
       const lobby = await getDoc(`lobbies/${player.gameKey}`);
 
@@ -83,8 +82,17 @@ const Lobby = () => {
         minHeight: `${window.innerHeight}px`,
       }}
     >
-      <GameKey>{gameKey}</GameKey>
-      <PlayersContainer>
+      <GameKey id="GameKey">{gameKey}</GameKey>
+      <PlayersContainer
+        style={
+          document.getElementById("GameKey") &&
+          {
+            maxHeight: `${window.innerHeight - parseInt(window.getComputedStyle(document.getElementById("GameKey")).height) - parseInt(window.getComputedStyle(document.getElementById("BottomItems")).height)}px`,
+            minHeight: `${window.innerHeight - parseInt(window.getComputedStyle(document.getElementById("GameKey")).height) - parseInt(window.getComputedStyle(document.getElementById("BottomItems")).height)}px`
+          }
+        }
+      >
+        {console.log(document.getElementById("BottomItems"))}
         {players.length > 0 &&
           players.map((player) => (
             <Player
@@ -96,25 +104,24 @@ const Lobby = () => {
             />
           ))}
       </PlayersContainer>
-      <BottomItems>
-      {host === player.id && <SelectCatagory />}
-      <PlayerCounter>
-        {readyPlayerCount === players.length && players.length > 1 ? (
-          <Info>Game starts in... {countdown}</Info>
-        ) : (
-          <Info>
-            {players.length > 1 ? (
-              <span>
-                People in lobby ({readyPlayerCount}/{players.length})
-              </span>
-            ) : (
-              <span>You need more people to start the game</span>
-            )}
-          </Info>
-        )}
-      </PlayerCounter>
-      </BottomItems> 
-
+      <BottomItems id="BottomItems">
+        {host === player.id && <SelectCatagory />}
+        <PlayerCounter>
+          {readyPlayerCount === players.length && players.length > 1 ? (
+            <Info>Game starts in... {countdown}</Info>
+          ) : (
+            <Info>
+              {players.length > 1 ? (
+                <span>
+                  People in lobby ({readyPlayerCount}/{players.length})
+                </span>
+              ) : (
+                <span>You need more people to start the game</span>
+              )}
+            </Info>
+          )}
+        </PlayerCounter>
+      </BottomItems>
     </LobbyContainer>
   );
 };
