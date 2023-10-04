@@ -264,7 +264,7 @@ const Game = () => {
   return (
     <GameContainer
       style={{
-        minHeight: `${window.innerHeight}px`,
+        minHeight: `${document.documentElement.clientHeight}px`,
       }}
     >
       {showPoints ? (
