@@ -150,7 +150,7 @@ const Game = () => {
     loadSong();
     calculateWhosTurn();
 
-    if (round != 0) {
+    if (round !== 0) {
       if (players[whosTurn]?.id !== player.id) {
         let adjustedRange = 20;
 
@@ -240,6 +240,7 @@ const Game = () => {
     if (round < lobby.round) {
       setRound(lobby.round);
     }
+    // eslint-disable-next-line
   }, [lobby]);
 
   return (

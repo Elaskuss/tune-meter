@@ -11,7 +11,6 @@ import {
   PlayersContainer,
   StartGame,
 } from "./lobby.styles";
-import { getDoc } from "../../config/firebase/realtime_database";
 import SelectCatagory from "../../components/select-catagory/select-catagory.component";
 
 const Lobby = () => {

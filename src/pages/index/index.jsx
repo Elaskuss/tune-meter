@@ -11,11 +11,11 @@ import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
 import { useEffect } from "react";
 import { createPlayer } from "../../config/firebase/realtime_database";
-import { PlayerContext, player } from "../../context/player.context";
+import { PlayerContext } from "../../context/player.context";
 
 const Index = () => {
   const [joinGame, setJoinGame] = useState("join");
-  const { updatePlayer, player } = useContext(PlayerContext);
+  const { updatePlayer } = useContext(PlayerContext);
 
   useEffect(() => {
     const createPlayerObject = async () => {
@@ -27,6 +27,7 @@ const Index = () => {
     } else {
       updatePlayer({id: localStorage.getItem("id"), gameKey: "", displayName: ""});
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleClick = (event) => {
