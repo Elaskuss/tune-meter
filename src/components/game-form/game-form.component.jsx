@@ -13,7 +13,7 @@ import { PlayerContext } from "../../context/player.context";
 const GameForm = ({ promt, type }) => {
    const [isLoading, setIsLoading] = useState(false);
    const navigate = useNavigate();
-   const { updatePlayer, updatePlayers } = useContext(PlayerContext);
+   const { updatePlayer, updatePlayers, updateLobby, player} = useContext(PlayerContext);
    
    
    
@@ -52,7 +52,8 @@ const GameForm = ({ promt, type }) => {
       event.preventDefault();
       setIsLoading(true);
       if (type === "hidden") {
-         await createGame(formFields.username, updatePlayer, updatePlayers);
+         const gameKey = await createGame();
+         await joinGame(gameKey, formFields.username, updatePlayer, updatePlayers, updateLobby, player);
          navigate("/lobby");
       } else {
          try {
@@ -60,7 +61,9 @@ const GameForm = ({ promt, type }) => {
                formFields.gameKey.toLocaleUpperCase(),
                formFields.username,
                updatePlayer,
-               updatePlayers
+               updatePlayers,
+               updateLobby,
+               player
             );
             navigate("/lobby");
          } catch (error) {

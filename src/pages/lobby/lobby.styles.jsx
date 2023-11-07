@@ -5,7 +5,7 @@ export const LobbyContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: ${props => props.containerHeight}px;
+  min-height: 100svh;
   h2 {
     justify-content: center;
     text-align: center;
@@ -14,8 +14,7 @@ export const LobbyContainer = styled.div`
 `;
 export const PlayersContainer = styled.div`
   display: flex;
-  min-height: ${props => props.containerHeight}px;
-  max-height: ${props => props.containerHeight}px;
+  flex-grow: 1;
   flex-direction: column;
   width: 100vw;
   align-items: center;
@@ -36,11 +35,40 @@ export const GameKey = styled.h1`
 `;
 
 export const PlayerCounter = styled.div`
+  display: flex;
+  justify-content: center;
   width: 100%;
   box-sizing: border-box;
 `;
-export const Info = styled.h2``;
+export const Info = styled.h2`
+  margin-left: 20px;
+  margin-right: 20px;
+`;
 
 export const BottomItems = styled.div`
+  box-sizing: border-box;
   width: 100%;
+`;
+
+export const StartGame = styled.button`
+  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  width: 150px;
+  height: 50px;
+  align-self: center;
+  background-color: #1db954; /* Spotify green color */
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+
+  @media (max-width: 900px) {
+    padding: 3px 5px;
+    font-size: 12px;
+    width: 100px;
+  }
 `;

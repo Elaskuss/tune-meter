@@ -16,7 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { Chance } from "chance";
 
 const Game = () => {
-  const { players, player, updatePlayer } = useContext(PlayerContext);
+  const { players, player, updatePlayer, lobby, updateLobby } =
+    useContext(PlayerContext);
   const [song, setSong] = useState("");
   const [songs, setSongs] = useState([]);
   const [whosTurn, setWhosTurn] = useState(0);
@@ -24,7 +25,6 @@ const Game = () => {
   const [round, setRound] = useState(0);
   const [showVotes, setShowVotes] = useState(false);
   const [showPoints, setShowPoints] = useState(false);
-  const [pointsAdded, setPointsAdded] = useState(false);
   const [totalGuessed, setTotalGuessed] = useState(0);
   const [catagory, setCatagory] = useState("Top 100");
   const navigate = useNavigate();
@@ -35,17 +35,17 @@ const Game = () => {
     if (!scraped) {
       sortedArray = sortedArray.filter((song) => song !== "");
     }
-    console.log(sortedArray);
     return sortedArray;
   }
 
   const calculateWhosTurn = () => {
     const modulo = players.length;
-    const round = player.round + 1;
+    const round = lobby.round + 1;
     const whosTurn = round % modulo;
 
     setWhosTurn(whosTurn);
   };
+
   const loadSong = async () => {
     if (!songs.length) {
       const lobby = await getDoc(`lobbies/${player.gameKey}`);
@@ -136,6 +136,7 @@ const Game = () => {
           }
           loadSong();
         }
+        console.log(song);
         setSong(song.data[0].preview);
       }
     } else {
@@ -146,22 +147,63 @@ const Game = () => {
   };
 
   useEffect(() => {
-    if (!song) {
-      setTimeout(async () => {
-        if (!song) {
-          const index = songs.indexOf(round);
-          if (index > -1) {
-            const updatedSongs = [...songs];
-            updatedSongs.splice(index, 1);
-            setSongs(updatedSongs);
-          }
-          loadSong();
-        }
-      }, 5000);
-    }
-
     loadSong();
     calculateWhosTurn();
+
+    if (round != 0) {
+      if (players[whosTurn]?.id !== player.id) {
+        let adjustedRange = 20;
+
+        let difference = Math.abs(players[whosTurn]?.guessed - player.guessed);
+        let rawPoints = 0;
+
+        if (difference <= adjustedRange) {
+          rawPoints =
+            -0.001 * Math.pow(difference, 3) +
+            0.055 * Math.pow(difference, 2) -
+            1.15 * difference +
+            10;
+        }
+
+        const points =
+          (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
+
+        updatePlayer({
+          points: player.points + points,
+          guessed: false,
+        });
+      } else {
+        updatePlayer({
+          guessed: false,
+        });
+      }
+
+      const DisplayingPointsAndNextRound = async () => {
+        setShowVotes(true);
+        await new Promise((resolve) => {
+          const timeoutId = setTimeout(() => {
+            setShowPoints(true);
+            clearTimeout(timeoutId);
+            resolve(); // Resolve the promise when the timeout is done
+          }, 5000);
+        });
+
+        await new Promise((resolve) => {
+          const timeoutId = setTimeout(() => {
+            setShowPoints(false);
+            setShowVotes(false);
+            updatePlayer({
+              guessedValue: false,
+              guessed: false,
+            });
+            clearTimeout(timeoutId);
+            resolve(); // Resolve the promise when the second timeout is done
+          }, 5000);
+        });
+      };
+      DisplayingPointsAndNextRound();
+    }
+
     // eslint-disable-next-line
   }, [songs, round]);
 
@@ -187,67 +229,18 @@ const Game = () => {
     }, 0);
 
     setTotalGuessed(totalGuessed);
-
-    const playerRoundUpdated = players.filter(
-      (player) => player.round > round
-    ).length;
-
-    if (playerRoundUpdated === players.length) {
-      setPointsAdded(false);
-      setShowVotes(true);
-      const DisplayingPointsAndNextRound = async () => {
-        await new Promise((resolve) => {
-          const timeoutId = setTimeout(() => {
-            setShowPoints(true);
-            setRound(player.round);
-            clearTimeout(timeoutId);
-            resolve(); // Resolve the promise when the timeout is done
-          }, 5000);
-        });
-
-        await new Promise((resolve) => {
-          const timeoutId = setTimeout(() => {
-            setShowPoints(false);
-            setShowVotes(false);
-            updatePlayer({ ...player, guessed: false });
-            clearTimeout(timeoutId);
-            resolve(); // Resolve the promise when the second timeout is done
-          }, 5000);
-        });
-      };
-      DisplayingPointsAndNextRound();
+    if (totalGuessed === players.length && player.id === lobby.host) {
+      updateLobby({ ...lobby, round: lobby.round + 1 });
     }
 
-    if (totalGuessed === players.length && !pointsAdded) {
-      setPointsAdded(true);
-      if (players[whosTurn]?.id !== player.id) {
-        let adjustedRange = 20;
-
-        let difference = Math.abs(players[whosTurn]?.guessed - player.guessed);
-        let rawPoints = 0;
-
-        if (difference <= adjustedRange) {
-          rawPoints =
-            -0.001 * Math.pow(difference, 3) +
-            0.055 * Math.pow(difference, 2) -
-            1.15 * difference +
-            10;
-        }
-
-        const points =
-          (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
-
-        updatePlayer({
-          ...player,
-          points: player.points + points,
-          round: player.round + 1,
-        });
-      } else {
-        updatePlayer({ ...player, round: player.round + 1 });
-      }
-    }
     // eslint-disable-next-line
   }, [players]);
+
+  useEffect(() => {
+    if (round < lobby.round) {
+      setRound(lobby.round);
+    }
+  }, [lobby]);
 
   return (
     <GameContainer

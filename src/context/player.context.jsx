@@ -4,79 +4,98 @@ import { setDoc } from "../config/firebase/realtime_database.js";
 export const PlayerContext = createContext();
 
 const INITIAL_STATE = {
-   players: [0],
-   player: {
-      displayName: "",
-      gameKey: "",
-      id: "",
-      status: "Not Ready",
-      points: 0,
-      disconnected: false,
-      guessed: false,
-      round: 0,
-      catagory: "Top 100",
-   },
-   songs: [false],
+  players: [],
+  player: {
+    displayName: "",
+    gameKey: "",
+    id: "",
+    status: "Not Ready",
+    points: 0,
+    guessed: false,
+    loading: false,
+    catagory: "Top 100",
+  },
+  songs: [false],
+  lobby: {
+    round: 0,
+    host: "",
+    gameKey: "",
+    canJoin: true,
+  },
 };
 
 // Define your playersReducer function
 const playersReducer = (state, action) => {
-   switch (action.type) {
-      case "UPDATE_PLAYERS":
-         return {
-            ...state,
-            players: action.payload,
-         };
-      case "UPDATE_PLAYER":
-         return {
-            ...state,
-            player: action.payload,
-         };
-      case "UPDATE_SONGS":
-         return {
-            ...state,
-            songs: action.payload,
-         };
-      default:
-         return state;
-   }
+  switch (action.type) {
+    case "UPDATE_PLAYERS":
+      return {
+        ...state,
+        players: action.payload,
+      };
+    case "UPDATE_PLAYER":
+      return {
+        ...state,
+        player: action.payload,
+      };
+    case "UPDATE_SONGS":
+      return {
+        ...state,
+        songs: action.payload,
+      };
+    case "UPDATE_LOBBY":
+      return {
+        ...state,
+        lobby: action.payload,
+      };
+    default:
+      return state;
+  }
 };
 
 export const PlayerProvider = ({ children }) => {
-   const [{ players, player, songs, spotifyPlayer }, dispatch] = useReducer(
-      playersReducer,
-      INITIAL_STATE
-   );
+  const [{ players, player, songs, lobby }, dispatch] = useReducer(
+    playersReducer,
+    INITIAL_STATE
+  );
 
-   const updatePlayers = (players) => {
-      dispatch({ type: "UPDATE_PLAYERS", payload: players });
-   };
+  const updatePlayers = (newPlayers) => {
+    const updatedPlayers = [...players, ...newPlayers];
 
-   const updatePlayer = (player) => {
-      dispatch({ type: "UPDATE_PLAYER", payload: player });
-      setDoc(`players/${player.id}`, player);
-   };
+    dispatch({ type: "UPDATE_PLAYERS", payload: updatedPlayers });
+  };
 
-   const updateSongs = (newSongs) => {
-      dispatch({ type: "UPDATE_SONGS", payload: newSongs });
-   };
+  const updatePlayer = async (updatedFields) => {
 
-   const updateSpotifyPlayer = (spotifyPlayer) => {
-      dispatch({ type: "UPDATE_SPOTIFY_PLAYER", payload: spotifyPlayer });
-   };
+    const updatedPlayer = { ...player, ...updatedFields };
 
-   const value = {
-      updatePlayers,
-      updatePlayer,
-      updateSongs,
-      updateSpotifyPlayer,
-      players,
-      player,
-      songs,
-      spotifyPlayer,
-   };
+    console.log(updatedPlayer);
 
-   return (
-      <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>
-   );
+    dispatch({ type: "UPDATE_PLAYER", payload: updatedPlayer });
+    await setDoc(`players/${updatedPlayer.id}`, updatedPlayer);
+    return updatedPlayer;
+  };
+
+  const updateSongs = (newSongs) => {
+    dispatch({ type: "UPDATE_SONGS", payload: newSongs });
+  };
+
+  const updateLobby = async (lobby) => {
+    dispatch({ type: "UPDATE_LOBBY", payload: lobby });
+    await setDoc(`lobbies/${lobby.gameKey}`, lobby);
+  };
+
+  const value = {
+    updatePlayers,
+    updatePlayer,
+    updateSongs,
+    updateLobby,
+    players,
+    player,
+    songs,
+    lobby,
+  };
+
+  return (
+    <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>
+  );
 };

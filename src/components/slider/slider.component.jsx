@@ -28,13 +28,13 @@ const Slider = ({ whosTurn, showVotes, song }) => {
     };
 
     const handleClick = () => {
-        updatePlayer({ ...player, guessed: value });
+        updatePlayer({guessed: true, guessedValue: value});
     };
 
     const calcPoint = () => {
         let adjustedRange = 20;
 
-        let difference = Math.abs(players[whosTurn]?.guessed - player.guessed);
+        let difference = Math.abs(players[whosTurn]?.guessedValue - player.guessedValue);
         let rawPoints = 0;
 
         if (difference <= adjustedRange) {
@@ -69,9 +69,9 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                                 return (
                                     <TheAnswer
                                         style={{
-                                            left: `${thisPlayer.guessed}%`,
+                                            left: `${thisPlayer.guessedValue}%`,
                                             transform: `translate(${calculateRatio(
-                                                thisPlayer.guessed
+                                                thisPlayer.guessedValue
                                             )}%, -150%) rotate(45deg)`,
                                             borderRadius: "30px 30px 0 30px",
                                         }}
@@ -95,16 +95,16 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                         max="100"
                         className="slider"
                         value={value}
-                        disabled={player.guessed}
+                        disabled={player.guessedValue}
                         onChange={handleSliderChange}
                     ></StyledSlider>
                     {showVotes && player.id !== players[whosTurn]?.id && (
                         <TheAnswer
                             style={{
                                 backgroundColor: "green",
-                                left: `${players[whosTurn]?.guessed}%`,
+                                left: `${players[whosTurn]?.guessedValue}%`,
                                 transform: `translate(${calculateRatio(
-                                    players[whosTurn]?.guessed
+                                    players[whosTurn]?.guessedValue
                                 )}%, 50%) rotate(45deg)`,
                                 borderRadius: "0 30px 30px 30px",
                             }}
@@ -115,14 +115,14 @@ const Slider = ({ whosTurn, showVotes, song }) => {
                                     transform: `rotate(-45deg)`,
                                 }}
                             >
-                                {players[whosTurn]?.guessed}
+                                {players[whosTurn]?.guessedValue}
                             </p>
                         </TheAnswer>
                     )}
                 </PointsContainer>
                 <Emoji>🔥</Emoji>
             </SliderInfo>
-            <Confirm onClick={handleClick} disabled={player.guessed}>
+            <Confirm onClick={handleClick} disabled={player.guessedValue}>
                 Confirm
             </Confirm>
             {song ? (

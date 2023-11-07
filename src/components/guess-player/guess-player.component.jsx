@@ -22,15 +22,15 @@ const GuessPlayer = ({ song, playerInfo, ...otherProps }) => {
 
          if(points < 100) {
             let playerPoints = player.points + 100
-            updatePlayer({...player, points: playerPoints, guessed: true});
+            updatePlayer({points: playerPoints, guessed: true});
          }else {
             let playerPoints = player.points + points
-            updatePlayer({...player, points: playerPoints, guessed: true});
+            updatePlayer({points: playerPoints, guessed: true});
          }
          
       }
       else{
-         updatePlayer({...player, guessed: true});
+         updatePlayer({guessed: true});
       }
    };
    return (

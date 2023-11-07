@@ -1,29 +1,32 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Border,
   NameTag,
   NavOptionContainer,
   PageContainer,
   SupportTag,
-  FooterContainer
+  FooterContainer,
 } from "./index.styles";
 import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
 import { useEffect } from "react";
-import { removeDoc } from "../../config/firebase/realtime_database";
-import { useNavigate } from "react-router-dom";
+import { createPlayer } from "../../config/firebase/realtime_database";
+import { PlayerContext, player } from "../../context/player.context";
 
 const Index = () => {
   const [joinGame, setJoinGame] = useState("join");
-  const navigate = useNavigate();
+  const { updatePlayer, player } = useContext(PlayerContext);
 
   useEffect(() => {
-    if (localStorage.getItem("id")) {
-      removeDoc(`/players/${localStorage.getItem("id")}`);
-      navigate("/");
-      localStorage.removeItem("id");
+    const createPlayerObject = async () => {
+      const id = await createPlayer();
+      updatePlayer({id: id});
+    };
+    if (localStorage.getItem("id") === null) {
+      createPlayerObject();
+    } else {
+      updatePlayer({id: localStorage.getItem("id"), gameKey: "", displayName: ""});
     }
-    // eslint-disable-next-line
   }, []);
 
   const handleClick = (event) => {
@@ -66,10 +69,11 @@ const Index = () => {
         <GameForm type={"hidden"} promt={"Create Room"} />
       )}
       <FooterContainer>
-      <NameTag>Created by Ivan Knezevic</NameTag> 
-      <SupportTag  target="_blank" href="https://ko-fi.com/ivanknezevic">Buy me a coffee!</SupportTag>
+        <NameTag>Created by Ivan Knezevic</NameTag>
+        <SupportTag target="_blank" href="https://ko-fi.com/ivanknezevic">
+          Buy me a coffee!
+        </SupportTag>
       </FooterContainer>
-
     </PageContainer>
   );
 };
