@@ -1,5 +1,5 @@
 import Index from "./pages/index/index";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Lobby from "./pages/lobby/lobby";
 import Game from "./pages/game/game";
 
