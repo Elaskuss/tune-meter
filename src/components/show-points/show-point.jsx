@@ -3,7 +3,7 @@ import { PlayerContext } from "../../context/player.context";
 import { PointsContainer, PointsInfo, Name, Point, Round } from "./show-points.styles";
 
 const ShowPoints = () => {
-    const { players, player, lobby } = useContext(PlayerContext);
+    const { players, lobby } = useContext(PlayerContext);
 
     players.sort((a, b) => b.points - a.points);
     let count = 0;
