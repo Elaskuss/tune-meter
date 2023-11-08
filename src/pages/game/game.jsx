@@ -57,8 +57,12 @@ const Game = () => {
       let songData;
       switch (lobby.catagory) {
         case "Top 100":
-          songs = await getSongs();
-          shuffledSongs = customShuffle(songs, player.gameKey, true);
+          //songs = await getSongs();
+          //shuffledSongs = customShuffle(songs, player.gameKey, true);
+          //setSongs(shuffledSongs);
+          songData = await fetchCatagory(3155776842);
+          songs = songData.tracks.data.map((song) => song.preview);
+          shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
