@@ -194,7 +194,7 @@ const Game = () => {
     }
 
     // eslint-disable-next-line
-  }, [songs, round, reconnectDone]);
+  }, [songs, round]);
 
   useEffect(() => {
     if (!pointsAdded) return;
