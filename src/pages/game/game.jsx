@@ -11,7 +11,7 @@ import { fetchCatagory, fetchSong } from "../../config/api/api";
 import Slider from "../../components/slider/slider.component";
 import { PlayerContext } from "../../context/player.context";
 import ShowPoints from "../../components/show-points/show-point";
-import { getDoc, removeDoc } from "../../config/firebase/realtime_database";
+import { getDoc } from "../../config/firebase/realtime_database";
 import { useNavigate } from "react-router-dom";
 import { Chance } from "chance";
 
@@ -25,6 +25,7 @@ const Game = () => {
   const [round, setRound] = useState(0);
   const [showVotes, setShowVotes] = useState(false);
   const [showPoints, setShowPoints] = useState(false);
+  const [pointsAdded, setPointsAdded] = useState(false);
   const [totalGuessed, setTotalGuessed] = useState(0);
   const [catagory, setCatagory] = useState("Top 100");
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const Game = () => {
 
     setWhosTurn(whosTurn);
   };
+
 
   const loadSong = async () => {
     if (!songs.length) {
@@ -124,11 +126,11 @@ const Game = () => {
     if (catagory === "Top 100") {
       if (songs.length) {
         const song = await fetchSong(
-          songs[round].title,
-          songs[round].artist.split(" ")[0]
+          songs[lobby.round].title,
+          songs[lobby.round].artist.split(" ")[0]
         );
         if (!song.data[0]) {
-          const index = songs.indexOf(round);
+          const index = songs.indexOf(lobby.round);
           if (index > -1) {
             const updatedSongs = [...songs];
             updatedSongs.splice(index, 1);
@@ -136,27 +138,35 @@ const Game = () => {
           }
           loadSong();
         }
-        console.log(song);
         setSong(song.data[0].preview);
       }
     } else {
       if (songs.length) {
-        setSong(songs[round]);
+        setSong(songs[lobby.round]);
       }
     }
   };
 
   useEffect(() => {
-    loadSong();
-    calculateWhosTurn();
-
-    if (round !== 0) {
-      if (players[whosTurn]?.id !== player.id) {
+    if (player.gameKey !== "") {
+      localStorage.setItem("gameKey", player.gameKey);
+      localStorage.setItem("catagory", player.catagory);
+      localStorage.setItem("displayName", player.displayName);
+      localStorage.setItem("points", player.points);
+    }
+    console.log(round);
+    if (round === 0) {
+      loadSong();
+      calculateWhosTurn();
+    } else {
+      if (players[whosTurn]?.id !== player.id && !player.reconnect) {
+        console.log(player.reconnect);
         let adjustedRange = 20;
 
-        let difference = Math.abs(players[whosTurn]?.guessed - player.guessed);
+        let difference = Math.abs(
+          players[whosTurn]?.guessedValue - player.guessedValue
+        );
         let rawPoints = 0;
-
         if (difference <= adjustedRange) {
           rawPoints =
             -0.001 * Math.pow(difference, 3) +
@@ -164,59 +174,73 @@ const Game = () => {
             1.15 * difference +
             10;
         }
-
         const points =
           (Math.floor(rawPoints) + (rawPoints % 1 === 0.5 ? 0.5 : 0)) * 10;
-
         updatePlayer({
           points: player.points + points,
           guessed: false,
         });
+        setPointsAdded(true);
       } else {
         updatePlayer({
           guessed: false,
         });
+        setPointsAdded(true);
       }
-
-      const DisplayingPointsAndNextRound = async () => {
-        setShowVotes(true);
-        await new Promise((resolve) => {
-          const timeoutId = setTimeout(() => {
-            setShowPoints(true);
-            clearTimeout(timeoutId);
-            resolve(); // Resolve the promise when the timeout is done
-          }, 5000);
-        });
-
-        await new Promise((resolve) => {
-          const timeoutId = setTimeout(() => {
-            setShowPoints(false);
-            setShowVotes(false);
-            updatePlayer({
-              guessedValue: false,
-              guessed: false,
-            });
-            clearTimeout(timeoutId);
-            resolve(); // Resolve the promise when the second timeout is done
-          }, 5000);
-        });
-      };
-      DisplayingPointsAndNextRound();
     }
 
     // eslint-disable-next-line
-  }, [songs, round]);
+  }, [songs, round, reconnectDone]);
+
+  useEffect(() => {
+    if (!pointsAdded) return;
+    const DisplayingPointsAndNextRound = async () => {
+      setShowVotes(true);
+      await new Promise((resolve) => {
+        const timeoutId = setTimeout(() => {
+          setShowPoints(true);
+          loadSong();
+          calculateWhosTurn();
+          setPointsAdded(false);
+          clearTimeout(timeoutId);
+          resolve();
+        }, 5000);
+      });
+
+      await new Promise((resolve) => {
+        const timeoutId = setTimeout(() => {
+          setShowPoints(false);
+          setShowVotes(false);
+          updatePlayer({
+            guessedValue: false,
+            guessed: false,
+          });
+          setPointsAdded(false);
+          clearTimeout(timeoutId);
+          resolve();
+        }, 5000);
+      });
+    };
+    DisplayingPointsAndNextRound();
+    // eslint-disable-next-line
+  }, [pointsAdded]);
 
   useEffect(() => {
     if (players.length === 1) {
-      removeDoc(`/players/${player.id}`);
       navigate("/");
     }
 
-    if (players.length < playerLength) {
+    if (players.length < playerLength || players.length > playerLength) {
       setSong(false);
       loadSong();
       calculateWhosTurn();
+    }
+
+    const host = players.filter((player) => player.id === lobby.host);
+    if (host.length === 0 && players.length) {
+      if (players[0].id === player.id) {
+        updateLobby({ ...lobby, host: player.id });
+      }
     }
 
     setPlayerLength(players.length);
@@ -229,7 +253,11 @@ const Game = () => {
     }, 0);
 
     setTotalGuessed(totalGuessed);
-    if (totalGuessed === players.length && player.id === lobby.host) {
+    if (
+      totalGuessed === players.length &&
+      player.id === lobby.host &&
+      players.length > 0
+    ) {
       updateLobby({ ...lobby, round: lobby.round + 1 });
     }
 

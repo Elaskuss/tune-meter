@@ -58,18 +58,17 @@ export const PlayerProvider = ({ children }) => {
     INITIAL_STATE
   );
 
-  const updatePlayers = (newPlayers) => {
-    const updatedPlayers = [...players, ...newPlayers];
-
-    dispatch({ type: "UPDATE_PLAYERS", payload: updatedPlayers });
+  const updatePlayers = (newPlayers, reconnect = false) => {
+    if (!reconnect) {
+      const updatedPlayers = [...players, ...newPlayers];
+      dispatch({ type: "UPDATE_PLAYERS", payload: updatedPlayers });
+    } else {
+      dispatch({ type: "UPDATE_PLAYERS", payload: newPlayers });
+    }
   };
 
   const updatePlayer = async (updatedFields) => {
-
     const updatedPlayer = { ...player, ...updatedFields };
-
-    console.log(updatedPlayer);
-
     dispatch({ type: "UPDATE_PLAYER", payload: updatedPlayer });
     await setDoc(`players/${updatedPlayer.id}`, updatedPlayer);
     return updatedPlayer;

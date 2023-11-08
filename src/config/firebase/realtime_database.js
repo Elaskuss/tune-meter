@@ -34,7 +34,7 @@ export const getDoc = async (directory) => {
 
 const directoryListeners = {};
 
-export const onDataChange = async (directory, key, value, update) => {
+export const onDataChange = async (directory, key, value, update, reconnect = false) => {
    if (directoryListeners[directory]) {
       directoryListeners[directory]();
    }
@@ -43,18 +43,19 @@ export const onDataChange = async (directory, key, value, update) => {
    const q = query(collectionRef, orderByChild(key), equalTo(value));
 
    let unsubscribe; // Define unsubscribe here
-
    if (directory === "players") {
       unsubscribe = onValue(q, async (snapshot) => {
          const dataArray = [];
          snapshot.forEach((childSnapshot) => {
             dataArray.push(childSnapshot.val());
          });
-         update(dataArray);
+         update(dataArray, reconnect);
       });
-   } else {
+   } else if (directory === "lobbies") {
       unsubscribe = onValue(q, async (snapshot) => {
-         update(snapshot.val()[value]);
+         if (snapshot.val()) {
+            update(snapshot.val()[value]);
+         }
       });
    }
 
@@ -148,7 +149,6 @@ export const joinGame = async (
    updatePlayer,
    updatePlayers,
    updateLobby,
-   player
 ) => {
    const value = await getDoc("lobbies/" + gameKey);
 
@@ -156,25 +156,30 @@ export const joinGame = async (
       throw new Error("Game not found");
    }
 
+   if (!value.canJoin) {
+      throw new Error("Game is already active");
+   }
+
+
    const sameName = await queryValue("players", "gameKey", gameKey);
 
    if (sameName !== null) {
       sameName.forEach((player) => {
-         if (player.displayName === displayName.toUpperCase()) {
+         if (player.displayName === displayName) {
             throw new Error("Username is already in use");
          }
       });
    }
 
-
-   await updatePlayer({gameKey: gameKey, displayName: displayName });
+   await updatePlayer({ gameKey: gameKey, displayName: displayName.toUpperCase() });
    onDataChange("lobbies", "gameKey", gameKey, updateLobby);
    onDataChange("players", "gameKey", gameKey, updatePlayers);
 };
 
-export const reconnectGame = async (player, updatePlayer, updatePlayers) => {
+export const reconnectGame = async (player, updatePlayer, updatePlayers, updateLobby) => {
    updatePlayer(player);
-   onDataChange("players", "gameKey", player.gameKey, updatePlayers);
+   onDataChange("lobbies", "gameKey", player.gameKey, updateLobby);
+   onDataChange("players", "gameKey", player.gameKey, updatePlayers, true);
 };
 
 //#endregion

@@ -10,7 +10,9 @@ import {
 import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
 import { useEffect } from "react";
-import { createPlayer } from "../../config/firebase/realtime_database";
+import {
+  createPlayer,
+} from "../../config/firebase/realtime_database";
 import { PlayerContext } from "../../context/player.context";
 
 const Index = () => {
@@ -20,15 +22,22 @@ const Index = () => {
   useEffect(() => {
     const createPlayerObject = async () => {
       const id = await createPlayer();
-      updatePlayer({id: id});
+      updatePlayer({ id: id });
     };
     if (localStorage.getItem("id") === null) {
       createPlayerObject();
     } else {
-      updatePlayer({id: localStorage.getItem("id"), gameKey: "", displayName: ""});
+      updatePlayer({
+        id: localStorage.getItem("id"),
+        gameKey: "",
+        displayName: "",
+        status: "Not Ready",
+        guessed: false,
+      });
     }
     // eslint-disable-next-line
   }, []);
+
 
   const handleClick = (event) => {
     setJoinGame(event.target.value);

@@ -50,6 +50,13 @@ const Lobby = () => {
     }, 0);
     setRadyPlayerCount(readyPlayersCount);
 
+    const host = players.filter((player) => player.id === lobby.host);
+    if (host.length === 0 && players.length) {
+      if (players[0].id === player.id) {
+        updateLobby({ ...lobby, host: player.id });
+      }
+    }
+
     // eslint-disable-next-line
   }, [players]);
 
