@@ -1,10 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useState } from "react";
 import { FormStyle, InputStyle, LobbyButton } from "./game-form.styles";
 import {
   createGame,
   joinGame,
-  onDataChange,
   reconnectGame,
 } from "../../config/firebase/realtime_database.js";
 import ErrorMessage from "../error-message/error-message.component";
@@ -12,11 +11,10 @@ import { useNavigate } from "react-router-dom";
 import { PlayerContext } from "../../context/player.context";
 
 const GameForm = ({ promt, type }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { updatePlayer, updatePlayers, updateLobby, player, players } =
+  const [isLoading, setIsLoading] = useState(false);
+  const { updatePlayer, updatePlayers, updateLobby, players } =
     useContext(PlayerContext);
-
 
   const defaultFormFields = {
     gameKey: "",
@@ -32,26 +30,6 @@ const GameForm = ({ promt, type }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [throwError, setThrowError] = useState(thrownErrors);
 
-  useEffect(() => {
-    setFormFields(defaultFormFields);
-
-    const playersLeftInLastGame = async () => {
-      await onDataChange(
-        "players",
-        "gameKey",
-        localStorage.getItem("gameKey"),
-        updatePlayers
-      );
-    };
-    playersLeftInLastGame();
-
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    console.log(players.length);
-  }, [players]);
-
   const handleChange = (event) => {
     const value = event.target.value;
     setFormFields({
@@ -64,6 +42,7 @@ const GameForm = ({ promt, type }) => {
     event.preventDefault();
     setIsLoading(true);
     if (type === "hidden") {
+      const host = true;
       const gameKey = await createGame();
       await joinGame(
         gameKey,
@@ -71,7 +50,7 @@ const GameForm = ({ promt, type }) => {
         updatePlayer,
         updatePlayers,
         updateLobby,
-        player
+        host
       );
       navigate("/lobby");
     } else {
@@ -81,8 +60,7 @@ const GameForm = ({ promt, type }) => {
           formFields.username.toLocaleUpperCase(),
           updatePlayer,
           updatePlayers,
-          updateLobby,
-          player
+          updateLobby
         );
         navigate("/lobby");
       } catch (error) {

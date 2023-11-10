@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { PlayerContext } from "./context/player.context";
 
 function App() {
-  const { player } = useContext(PlayerContext);
+  const { player, players } = useContext(PlayerContext);
   const [reload, setReload] = useState(false);
   const navigate = useNavigate();
 
@@ -18,6 +18,13 @@ function App() {
     }
     // eslint-disable-next-line
   }, [reload]);
+
+  useEffect(() => {
+    if (players.length < 1) {
+      navigate("/");
+    }
+    //eslint-disable-next-line
+  }, [players]);
 
   useEffect(() => {
     if (!player.gameKey) {

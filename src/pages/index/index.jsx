@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Border,
   NameTag,
@@ -10,34 +10,16 @@ import {
 import NavOption from "../../components/nav-button/nav-option.component";
 import GameForm from "../../components/game-form/game-form.component";
 import { useEffect } from "react";
-import {
-  createPlayer,
-} from "../../config/firebase/realtime_database";
-import { PlayerContext } from "../../context/player.context";
+import { disconnectNow } from "../../config/firebase/realtime_database";
 
 const Index = () => {
   const [joinGame, setJoinGame] = useState("join");
-  const { updatePlayer } = useContext(PlayerContext);
 
   useEffect(() => {
-    const createPlayerObject = async () => {
-      const id = await createPlayer();
-      updatePlayer({ id: id });
-    };
-    if (localStorage.getItem("id") === null) {
-      createPlayerObject();
-    } else {
-      updatePlayer({
-        id: localStorage.getItem("id"),
-        gameKey: "",
-        displayName: "",
-        status: "Not Ready",
-        guessed: false,
-      });
+    if (localStorage.getItem("id")) {
+      disconnectNow(localStorage.getItem("id"));
     }
-    // eslint-disable-next-line
   }, []);
-
 
   const handleClick = (event) => {
     setJoinGame(event.target.value);

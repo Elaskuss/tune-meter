@@ -54,7 +54,6 @@ export const StyledSlider = styled.input`
 `;
 
 export const SliderValue = styled.h1`
-   margin-bottom: 100px;
 `;
 
 export const TheAnswer = styled.div`
@@ -90,7 +89,6 @@ export const Confirm = styled.button`
    border-radius: 50px;
    font-size: 16px;
    cursor: pointer;
-   margin-top: 100px;
 
    &:disabled {
       background-color: #cccccc; /* Change the color for disabled state */

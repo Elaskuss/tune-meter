@@ -12,7 +12,8 @@ const INITIAL_STATE = {
     status: "Not Ready",
     points: 0,
     guessed: false,
-    loading: false,
+    guessedValue: false,
+    online: false,
     catagory: "Top 100",
   },
   songs: [false],
@@ -58,13 +59,20 @@ export const PlayerProvider = ({ children }) => {
     INITIAL_STATE
   );
 
-  const updatePlayers = (newPlayers, reconnect = false) => {
-    if (!reconnect) {
-      const updatedPlayers = [...players, ...newPlayers];
-      dispatch({ type: "UPDATE_PLAYERS", payload: updatedPlayers });
-    } else {
-      dispatch({ type: "UPDATE_PLAYERS", payload: newPlayers });
-    }
+  const updatePlayers = (newPlayers) => {
+    const updatedPlayers = newPlayers.map((newPlayer) => {
+      const matchingExistingPlayerIndex = players.findIndex(
+        (existingPlayer) => existingPlayer.id === newPlayer.id
+      );
+
+      if (matchingExistingPlayerIndex !== -1) {
+        return { ...players[matchingExistingPlayerIndex], ...newPlayer };
+      } else {
+        return newPlayer;
+      }
+    });
+
+    dispatch({ type: "UPDATE_PLAYERS", payload: updatedPlayers });
   };
 
   const updatePlayer = async (updatedFields) => {

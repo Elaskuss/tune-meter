@@ -7,7 +7,7 @@ import {
   WaitingForContainer,
 } from "./game.styled";
 import { getSongs } from "../../config/firebase/firestore";
-import { fetchCatagory, fetchSong } from "../../config/api/api";
+import { fetchCatagory } from "../../config/api/api";
 import Slider from "../../components/slider/slider.component";
 import { PlayerContext } from "../../context/player.context";
 import ShowPoints from "../../components/show-points/show-point";
@@ -27,7 +27,6 @@ const Game = () => {
   const [showPoints, setShowPoints] = useState(false);
   const [pointsAdded, setPointsAdded] = useState(false);
   const [totalGuessed, setTotalGuessed] = useState(0);
-  const [catagory, setCatagory] = useState("Top 100");
   const navigate = useNavigate();
 
   function customShuffle(arrToSort, inputString, scraped = false) {
@@ -47,11 +46,9 @@ const Game = () => {
     setWhosTurn(whosTurn);
   };
 
-
   const loadSong = async () => {
     if (!songs.length) {
       const lobby = await getDoc(`lobbies/${player.gameKey}`);
-      setCatagory(lobby.catagory);
       let songs;
       let shuffledSongs;
       let songData;
@@ -61,61 +58,61 @@ const Game = () => {
           //shuffledSongs = customShuffle(songs, player.gameKey, true);
           //setSongs(shuffledSongs);
           songData = await fetchCatagory(3155776842);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
         case "Party":
           songData = await fetchCatagory(11759239561);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
         case "Rock":
           songData = await fetchCatagory(1306931615);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
         case "Country":
           songData = await fetchCatagory(1130102843);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
         case "Rap":
           songData = await fetchCatagory(11641952984);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
         case "K-pop":
           songData = await fetchCatagory(11732036004);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
 
           break;
         case "00s":
           songData = await fetchCatagory(248297032);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
           break;
         case "80s":
           songData = await fetchCatagory(867825522);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
           break;
         case "90s":
           songData = await fetchCatagory(878989033);
-          songs = songData.tracks.data.map((song) => song.preview);
+          songs = songData.tracks.data.map((song) => song);
           shuffledSongs = customShuffle(songs, player.gameKey);
           setSongs(shuffledSongs);
           break;
@@ -127,7 +124,7 @@ const Game = () => {
           break;
       }
     }
-    if (catagory === "Top 100") {
+    /*if (catagory === "Top 100") {
       if (songs.length) {
         const song = await fetchSong(
           songs[lobby.round].title,
@@ -144,10 +141,10 @@ const Game = () => {
         }
         setSong(song.data[0].preview);
       }
-    } else {
-      if (songs.length) {
-        setSong(songs[lobby.round]);
-      }
+    } else {*/
+    if (songs.length) {
+      setSong(songs[lobby.round]);
+      // }
     }
   };
 

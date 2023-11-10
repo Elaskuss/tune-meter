@@ -9,6 +9,8 @@ import {
    remove,
    update,
    push,
+   onDisconnect,
+   getDatabase,
 } from "firebase/database";
 import { dbRealtime } from "./firebase.config";
 import { v4 as uuidv4 } from "uuid";
@@ -38,7 +40,6 @@ export const onDataChange = async (directory, key, value, update, reconnect = fa
    if (directoryListeners[directory]) {
       directoryListeners[directory]();
    }
-
    const collectionRef = ref(db, directory);
    const q = query(collectionRef, orderByChild(key), equalTo(value));
 
@@ -49,7 +50,8 @@ export const onDataChange = async (directory, key, value, update, reconnect = fa
          snapshot.forEach((childSnapshot) => {
             dataArray.push(childSnapshot.val());
          });
-         update(dataArray, reconnect);
+         const filteredArray = dataArray.filter(player => player.online === true);
+         update(filteredArray, reconnect);
       });
    } else if (directory === "lobbies") {
       unsubscribe = onValue(q, async (snapshot) => {
@@ -58,7 +60,6 @@ export const onDataChange = async (directory, key, value, update, reconnect = fa
          }
       });
    }
-
    // Store the unsubscribe function for this directory
    directoryListeners[directory] = unsubscribe;
 };
@@ -112,8 +113,11 @@ export const removeDoc = async (directory) => {
 
 export const createPlayer = async () => {
    const id = uuidv4();
-   localStorage.setItem("id", id);
-   return id;
+   if (!localStorage.getItem("id")) {
+      localStorage.setItem("id", id);
+      return id;
+   }
+   return localStorage.getItem("id");
 };
 
 export const createGame = async () => {
@@ -132,10 +136,6 @@ export const createGame = async () => {
       const value = await getDoc("lobbies/" + gameKey);
 
       if (value === null) {
-         const playerId = localStorage.getItem("id");
-
-         await setDoc("lobbies/" + gameKey, { host: playerId, catagory: "Top 100", round: 0, gameKey: gameKey, canJoin: true, roundOver: false, });
-
          gameCreated = true;
       }
    } while (gameCreated === false);
@@ -149,7 +149,14 @@ export const joinGame = async (
    updatePlayer,
    updatePlayers,
    updateLobby,
+   host = false,
 ) => {
+
+   const id = await createPlayer();
+   if (host) {
+      await setDoc("lobbies/" + gameKey, { host: id, catagory: "Top 100", round: 0, gameKey: gameKey, canJoin: true, roundOver: false, });
+   }
+
    const value = await getDoc("lobbies/" + gameKey);
 
    if (value === null) {
@@ -171,7 +178,14 @@ export const joinGame = async (
       });
    }
 
-   await updatePlayer({ gameKey: gameKey, displayName: displayName.toUpperCase() });
+   const reUseId = await getDoc("players/" + id);
+   if (reUseId?.gameKey === gameKey) {
+      await updatePlayer({ ...reUseId, displayName: displayName.toUpperCase(), online: true, status: "Not Ready" });
+   } else {
+      await updatePlayer({ id: id, gameKey: gameKey, displayName: displayName.toUpperCase(), online: true });
+   }
+
+   await disconnect(id);
    onDataChange("lobbies", "gameKey", gameKey, updateLobby);
    onDataChange("players", "gameKey", gameKey, updatePlayers);
 };
@@ -182,4 +196,14 @@ export const reconnectGame = async (player, updatePlayer, updatePlayers, updateL
    onDataChange("players", "gameKey", player.gameKey, updatePlayers, true);
 };
 
-//#endregion
+export const disconnect = async (id) => {
+   const db = getDatabase();
+   const playersRef = ref(db, `players/${id}`);
+   await onDisconnect(playersRef).update({ displayName: "", online: false });
+};
+
+export const disconnectNow = async (id) => {
+   const db = getDatabase();
+   const playersRef = ref(db, `players/${id}`);
+   await update(playersRef, { displayName: "", online: false });
+};
